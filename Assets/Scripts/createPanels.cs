@@ -15,6 +15,17 @@ public class createPanels : MonoBehaviour
     private TextMeshProUGUI text1;
     private TextMeshProUGUI text2;
     public List<GameObject> panels = new List<GameObject>();
+
+    public GameObject circleButtonPrefab;
+
+
+    // for clickable ptofile buttons
+    public Color selectedColor = Color.yellow;  // Set selectedColor to yellow
+    public Color defaultColor = Color.gray;
+
+private List<Button> buttons = new List<Button>();
+
+    private Button selectedButton;
     public void Start()
     {
         GameObject gameManagerObject = GameObject.Find("scriptMoves2");
@@ -59,6 +70,50 @@ public class createPanels : MonoBehaviour
             if (playerPanelPrefab != null)
             {
                 GameObject playerPlane = Instantiate(playerPanelPrefab, spawnPosition, Quaternion.identity, canvas);
+                Transform names = playerPlane.transform.Find("Names");
+
+                // Calculate the width of a single button
+                float buttonWidth = circleButtonPrefab.GetComponent<RectTransform>().rect.width;
+                // Set the maximum buttons per row
+                int maxButtonsPerRow = 3;
+
+                // Calculate the spacing between buttons to fit them in a row
+                float spacing = buttonWidth * maxButtonsPerRow / 3* 2;
+                int pCount = playersList.Count;
+
+                int dummy = 0;
+
+                for (int i = 0; i < pCount; i++)
+                {
+                    if (player.pname != playersList[i].pname)
+                    {
+                            // Calculate row and column indices for the button
+                        int row = (i+dummy) / maxButtonsPerRow;
+                        int col = (i+dummy) % maxButtonsPerRow;
+
+                        // Calculate the position with appropriate spacing
+                        Vector3 buttonPosition = new Vector3(
+                            names.position.x + (col) * buttonWidth* 2 - spacing,
+                            names.position.y - (row-1) * buttonWidth * 2,
+                            names.position.z);
+
+                        // Instantiate the button at the calculated position
+                        GameObject circleButtonInstance = Instantiate(circleButtonPrefab, buttonPosition, Quaternion.identity, names);
+                        TextMeshProUGUI tmpText = circleButtonInstance.GetComponentInChildren<TextMeshProUGUI>();
+                        tmpText.text = playersList[i].pname;
+                        Button circleButton = circleButtonInstance.GetComponent<Button>();
+                        circleButton.onClick.AddListener(() => OnButtonClick(circleButton));
+                        //making clickable
+                        
+                    }
+                    else
+                    {
+                        dummy--;
+                    }
+                    
+                }
+
+
                 playerPlane.name= player.pname;
                 
                 playerPlane.SetActive(true);
@@ -118,6 +173,12 @@ public class createPanels : MonoBehaviour
         GameObject closingpanel = GameObject.Find("introPanel");
         closingpanel.SetActive(false);
         openingpanel.SetActive(true);
+    }
+
+
+    void OnButtonClick(Button clickedButton)
+    {
+
     }
     
 }
