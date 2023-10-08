@@ -14,7 +14,9 @@ namespace playerNS{
     private bool charmed;
     private bool protectd; // Note: 'protected' is a valid keyword, but 'protectd' might be a typo
     private bool rescued;
+    private bool shot;
     private bool dead;
+    private bool silenced;
 
 
     // Default constructor
@@ -26,10 +28,12 @@ namespace playerNS{
         protectd = false;
         rescued = false;
         dead = false;
+        shot = false;
+        silenced = false;
     }
 
     // Parameterized constructor
-    public Players(string pn, string r, bool ch, bool pr, bool re, bool de)
+    public Players(string pn, string r, bool ch, bool pr, bool re, bool de, bool sh, bool si)
     {
         pname = pn;
         role = r;
@@ -37,6 +41,8 @@ namespace playerNS{
         protectd = pr;
         rescued = re;
         dead = de;
+        shot = sh;
+        silenced = si;
     }
 
     public void printPlayer()
@@ -159,7 +165,7 @@ public class GameManager : MonoBehaviour
                     for (int i = 0; i < textListLength; i++)
                     {
                         string role = GetNextRole();
-                        Players player = new Players(textList[i], role, false, false, false, false);
+                        Players player = new Players(textList[i], role, false, false, false, false, false, false);
                         playerSit.Add(player);
                         player.printPlayer();
                     }

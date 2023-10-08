@@ -8,12 +8,12 @@ public class createPanels : MonoBehaviour
 {
     private GameManager gameManager;
     public GameObject playerPanelPrefab;
+    public GameObject transferPanelPrefab;
     public Vector3 spawnPosition;
     public Transform canvas;
     public GameObject scriptAl;
     public GameObject openingpanel;
-    private TextMeshProUGUI text1;
-    private TextMeshProUGUI text2;
+    private TextMeshProUGUI pNameText1, pNameText2 , tNameText1, pRoleText1, pRoleText2;
     public List<GameObject> panels = new List<GameObject>();
 
     public GameObject circleButtonPrefab;
@@ -23,9 +23,11 @@ public class createPanels : MonoBehaviour
     public Color selectedColor = Color.yellow;  // Set selectedColor to yellow
     public Color defaultColor = Color.gray;
 
-private List<Button> buttons = new List<Button>();
+    private List<Button> buttons = new List<Button>();
 
     private Button selectedButton;
+
+    
     public void Start()
     {
         GameObject gameManagerObject = GameObject.Find("scriptMoves2");
@@ -69,6 +71,8 @@ private List<Button> buttons = new List<Button>();
         {
             if (playerPanelPrefab != null)
             {
+                GameObject transferPlane = Instantiate(transferPanelPrefab, spawnPosition, Quaternion.identity, canvas);
+
                 GameObject playerPlane = Instantiate(playerPanelPrefab, spawnPosition, Quaternion.identity, canvas);
                 Transform names = playerPlane.transform.Find("Names");
 
@@ -78,7 +82,7 @@ private List<Button> buttons = new List<Button>();
                 int maxButtonsPerRow = 3;
 
                 // Calculate the spacing between buttons to fit them in a row
-                float spacing = buttonWidth * maxButtonsPerRow / 3* 2;
+                float spacing = buttonWidth * maxButtonsPerRow / 3 * 2;
                 int pCount = playersList.Count;
 
                 int dummy = 0;
@@ -87,14 +91,14 @@ private List<Button> buttons = new List<Button>();
                 {
                     if (player.pname != playersList[i].pname)
                     {
-                            // Calculate row and column indices for the button
-                        int row = (i+dummy) / maxButtonsPerRow;
-                        int col = (i+dummy) % maxButtonsPerRow;
+                        // Calculate row and column indices for the button
+                        int row = (i + dummy) / maxButtonsPerRow;
+                        int col = (i + dummy) % maxButtonsPerRow;
 
                         // Calculate the position with appropriate spacing
                         Vector3 buttonPosition = new Vector3(
-                            names.position.x + (col) * buttonWidth* 2 - spacing,
-                            names.position.y - (row-1) * buttonWidth * 2,
+                            names.position.x + (col) * buttonWidth * 2 - spacing,
+                            names.position.y - (row - 1) * buttonWidth * 2,
                             names.position.z);
 
                         // Instantiate the button at the calculated position
@@ -104,36 +108,56 @@ private List<Button> buttons = new List<Button>();
                         Button circleButton = circleButtonInstance.GetComponent<Button>();
                         circleButton.onClick.AddListener(() => OnButtonClick(circleButton));
                         //making clickable
-                        
+
                     }
                     else
                     {
                         dummy--;
                     }
-                    
+
                 }
 
-
-                playerPlane.name= player.pname;
-                
+                string playerName = player.pname;
+                playerPlane.name = playerName;
+                string roleName = player.role;
                 playerPlane.SetActive(true);
+                transferPlane.SetActive(true);
+                panels.Add(transferPlane);
                 panels.Add(playerPlane);
+                transferPlane.SetActive(false);
                 playerPlane.SetActive(false);
                 Debug.Log("gorko2 " + panels.Count);
+
+                
                 if (playerPlane != null)
                 {
                     setPlanes setPlaneScript = playerPanelPrefab.GetComponent<setPlanes>();
-                    text1 = playerPlane.transform.Find("nameText").GetComponent<TextMeshProUGUI>();
-                    text2 = playerPlane.transform.Find("roleText").GetComponent<TextMeshProUGUI>();
-                    Button passButton =  playerPlane.transform.Find("passButton").GetComponent<Button>();
-                    panelManager  pManager = GetComponent<panelManager >();
+                    pNameText1 = playerPlane.transform.Find("nameText").GetComponent<TextMeshProUGUI>();
+                    pRoleText2 = playerPlane.transform.Find("roleText").GetComponent<TextMeshProUGUI>();
+                    Button passButton = playerPlane.transform.Find("passButton").GetComponent<Button>();
+                    Button pickButton = playerPlane.transform.Find("pickButton").GetComponent<Button>();
+                    panelManager pManager = GetComponent<panelManager>();
                     passButton.onClick.AddListener(pManager.passingPages);
-                    text1.text = "Name: " +  player.pname;
-                    text2.text = "Role: " +  player.role;
-                    if (setPlaneScript != null)
+                    pNameText1.text = "Name: " + player.pname;
+                    pRoleText2.text = "Role: " + player.role;
+
+                    tNameText1 = transferPlane.transform.Find("nameText").GetComponent<TextMeshProUGUI>();
+                    tNameText1.text = player.pname;
+                    Button seeButton = transferPlane.transform.Find("seeButton").GetComponent<Button>();
+                    seeButton.onClick.AddListener(pManager.passingPages);
+                    TextMeshProUGUI buttonText = pickButton.GetComponentInChildren<TextMeshProUGUI>();
+                    if (roleName == "AI TOYON"  || roleName == "KIZAGAN" || roleName == "OD ANA" )
                     {
-                        //setPlaneScript.SetPlayer(player);
-                        TextMeshProUGUI[] textComponents = playerPlane.GetComponentsInChildren<TextMeshProUGUI>();
+                        Debug.Log("valla girdi: " + roleName );
+                        buttonText.text = "Announce";
+                    }
+                    else
+                    {
+                     //Debug.Log("valla girMEdi: " + playerName );
+
+                    }
+
+                    TextMeshProUGUI[] textComponents = playerPlane.GetComponentsInChildren<TextMeshProUGUI>();
 
                     foreach (TextMeshProUGUI textComponent in textComponents)
                     {
@@ -149,11 +173,6 @@ private List<Button> buttons = new List<Button>();
                         }
                     }
 
-                    }
-                    else
-                    {
-                        Debug.LogError("setPlanes component not found on player panel.");
-                    }
                 }
                 else
                 {
@@ -166,7 +185,7 @@ private List<Button> buttons = new List<Button>();
             }
         }
 
-        
+
     }
     public void changeToStart()
     {
@@ -180,5 +199,5 @@ private List<Button> buttons = new List<Button>();
     {
 
     }
-    
+
 }
