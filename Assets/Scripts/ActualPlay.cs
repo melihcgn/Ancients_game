@@ -1,29 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using playerNS;
 public class ActualPlay : MonoBehaviour
 {
-    void afterPlayerAction()
+    public GameObject scriptMoves;
+    private createPanels cPanels;
+    public void afterPlayerAction()
     {
-        /*GameObject gameManagerObject = GameObject.Find("scriptMoves2");
+        
+        cPanels = scriptMoves.GetComponent<createPanels>();
+        List<Players> playersList = cPanels.ps;
 
-        if (gameManagerObject != null)
+        for (int i = 0; i < playersList.Count; i++)
         {
-            gameManager = gameManagerObject.GetComponent<GameManager>();
-
-            if (gameManager != null)
+            if (playersList[i].dead == true)
             {
-                List<Players> players = gameManager.playerSit;
+                Debug.Log(playersList[i].pname + " is dead!!");
             }
-            else 
+            else
             {
-                Debug.LogError("GameManager component not found.");
+                Debug.Log(playersList[i].pname + " is not dead. Nothing to worry :)");
             }
-        }
-        else
-        {
-            Debug.LogError("GameManager object not found.");
-        }*/
+        }       
     }
 }

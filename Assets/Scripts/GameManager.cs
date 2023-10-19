@@ -15,7 +15,7 @@ namespace playerNS{
     private bool protectd; // Note: 'protected' is a valid keyword, but 'protectd' might be a typo
     private bool rescued;
     private bool shot;
-    private bool dead;
+    public bool dead;
     private bool silenced;
 
 
@@ -53,6 +53,10 @@ namespace playerNS{
         Debug.Log("protectd: " + this.protectd);
         Debug.Log("rescued: " + this.rescued);
         Debug.Log("dead: " + this.dead);
+    }
+    public void changeDead(bool d)
+    {
+        this.dead = d;
     }
 }
 
@@ -237,6 +241,8 @@ public class GameManager : MonoBehaviour
             Debug.Log(item);
         }
     }
+
+    
 
     // INSTANTIATE PART
 

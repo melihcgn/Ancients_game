@@ -4,6 +4,9 @@ using UnityEngine;
 using playerNS;
 using TMPro;
 using UnityEngine.UI;
+using System.Linq;
+
+
 public class createPanels : MonoBehaviour
 {
     private GameManager gameManager;
@@ -18,14 +21,14 @@ public class createPanels : MonoBehaviour
 
     public GameObject circleButtonPrefab;
 
-
     // for clickable ptofile buttons
     public Color selectedColor = Color.yellow;  // Set selectedColor to yellow
     public Color defaultColor = Color.gray;
 
     private List<Button> buttons = new List<Button>();
+    public List<Players> ps = new List<Players>();
 
-    private Button selectedButton;
+    public Button selectedButton; 
 
     
     public void Start()
@@ -39,6 +42,7 @@ public class createPanels : MonoBehaviour
             if (gameManager != null)
             {
                 List<Players> players = gameManager.playerSit;
+                ps = players;
 
                 foreach (Players player in players)
                 {
@@ -57,6 +61,8 @@ public class createPanels : MonoBehaviour
             Debug.LogError("GameManager object not found.");
         }
     }
+
+
 
     public void SetupPlayerPanels(List<Players> playersList)
     {
@@ -106,9 +112,8 @@ public class createPanels : MonoBehaviour
                         TextMeshProUGUI tmpText = circleButtonInstance.GetComponentInChildren<TextMeshProUGUI>();
                         tmpText.text = playersList[i].pname;
                         Button circleButton = circleButtonInstance.GetComponent<Button>();
-                        circleButton.onClick.AddListener(() => OnButtonClick(circleButton));
+                        circleButton.onClick.AddListener(() => OnButtonClick(ref circleButton, playersList));
                         //making clickable
-
                     }
                     else
                     {
@@ -138,9 +143,19 @@ public class createPanels : MonoBehaviour
                     Button pickButton = playerPlane.transform.Find("pickButton").GetComponent<Button>();
                     panelManager pManager = GetComponent<panelManager>();
                     passButton.onClick.AddListener(pManager.passingPages);
+                    pickButton.onClick.AddListener(() => changeStatus(player.role));
                     pNameText1.text = "Name: " + player.pname;
                     pRoleText2.text = "Role: " + player.role;
-
+                    if (player.pname == playersList[playersList.Count - 1].pname)
+                    {
+                        ActualPlay Aplay = GetComponent<ActualPlay>();
+                        pickButton.onClick.AddListener(Aplay.afterPlayerAction);
+                        passButton.onClick.AddListener(Aplay.afterPlayerAction);
+                    }
+                    else
+                    {
+                        Debug.Log(player.pname+" daha olmadı " +playersList[playersList.Count - 1].pname);
+                    }
                     tNameText1 = transferPlane.transform.Find("nameText").GetComponent<TextMeshProUGUI>();
                     tNameText1.text = player.pname;
                     Button seeButton = transferPlane.transform.Find("seeButton").GetComponent<Button>();
@@ -195,9 +210,113 @@ public class createPanels : MonoBehaviour
     }
 
 
-    void OnButtonClick(Button clickedButton)
+    public void changeStatus(string ExeRole)
     {
+        if(selectedButton != null){
+            TextMeshProUGUI buttonText = selectedButton.GetComponentInChildren<TextMeshProUGUI>();
+            Debug.Log("sdfsdf=  " + ps[0].pname + " DSFDS " + ExeRole);
+            Players playerCell = new Players();
+             playerCell = ps.FirstOrDefault(players => players.pname == buttonText.text);
 
+            Players choosingCell = ps.FirstOrDefault(players => players.role == ExeRole);
+            Debug.Log("resmin var şuan elimde: " + choosingCell.pname);
+            if (choosingCell.role == "MERGEN")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "Ulgen")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "KIZAGAN")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "UMAY")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "BURKUT")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "OD ANA")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "AKBUGA")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "AI TOYON")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "AYZIT")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "ALAZ HAN")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "SIGUN GEYIK")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "YILDIZ HAN")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "TEPEGOZ")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "DEMIRKIYNAK")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "SU IYESI")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "KORMOS")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "ARCURA")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "AZMIC")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "GULYABANI")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else if (choosingCell.role == "KORTIGES")
+            {
+                playerCell.changeDead(true) ;
+            }
+            else
+            {
+                Debug.Log("OLMADIA Q " );
+            }
+            Debug.Log("resmin mi var şuan elimde: " + playerCell.pname + " - " + playerCell.dead );
+        }
+        else
+        {
+             Debug.Log("SIKINTI VAAR");
+        }
+        
+    }   
+
+    private void OnButtonClick( ref Button clickedButton, List<Players> ps)
+    {
+        selectedButton = clickedButton;
+        TextMeshProUGUI buttonText = selectedButton.GetComponentInChildren<TextMeshProUGUI>();
+        Debug.Log("DUR BAKIMMM : " + buttonText.text);
     }
-
 }

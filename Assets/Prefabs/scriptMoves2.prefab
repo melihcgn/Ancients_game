@@ -1,0 +1,113 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4436206243189678182
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1546702933689453552}
+  - component: {fileID: 3360911362617978225}
+  - component: {fileID: 8128917224341676039}
+  - component: {fileID: 108102306226744221}
+  - component: {fileID: 572048850488441607}
+  - component: {fileID: 1043303811042155096}
+  m_Layer: 0
+  m_Name: scriptMoves2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1546702933689453552
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4436206243189678182}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 330.28134, y: 1537.8118, z: -6.4220405}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3360911362617978225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4436206243189678182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a917c5a3a3d4fc244a83552514a3a963, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputField: {fileID: 0}
+  nameListText: {fileID: 0}
+  textList: []
+--- !u!114 &8128917224341676039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4436206243189678182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97e972998107303489419a2f97fc3375, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &108102306226744221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4436206243189678182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 673dea9b395788f439508c636b620297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerSit: []
+--- !u!114 &572048850488441607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4436206243189678182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89304799a97334f4f97cd2a804b1faec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPanelPrefab: {fileID: 6316818833654122931, guid: 4509aac8b50a25f49b4bb6c12b5e7b6c, type: 3}
+  transferPanelPrefab: {fileID: 7753847860453528628, guid: fd067e7631fa0d8409d513f7efa336d2, type: 3}
+  spawnPosition: {x: 540, y: 1140, z: 0}
+  canvas: {fileID: 0}
+  scriptAl: {fileID: 4436206243189678182}
+  openingpanel: {fileID: 0}
+  panels: []
+  circleButtonPrefab: {fileID: 6381376222137903749, guid: 1646f1adc8b5eca47afd58f2e68143bd, type: 3}
+  selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  defaultColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+--- !u!114 &1043303811042155096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4436206243189678182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4aeec64be357bc44b2454c8cd1f6cfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panels: []
