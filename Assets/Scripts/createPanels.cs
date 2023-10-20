@@ -9,6 +9,7 @@ using System.Linq;
 
 public class createPanels : MonoBehaviour
 {
+    public GameObject morngPanel;
     private GameManager gameManager;
     public GameObject playerPanelPrefab;
     public GameObject transferPanelPrefab;
@@ -345,8 +346,9 @@ public class createPanels : MonoBehaviour
                 Debug.LogError("Player panel prefab is null.");
             }
         }
-
-
+        
+        panels.Add(morngPanel);
+        
     }
     public void changeToStart()
     {
