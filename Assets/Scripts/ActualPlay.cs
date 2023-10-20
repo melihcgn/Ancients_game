@@ -14,13 +14,18 @@ public class ActualPlay : MonoBehaviour
 
         for (int i = 0; i < playersList.Count; i++)
         {
-            if (playersList[i].dead == true)
+            Players thePlayer = playersList[i];
+            if (thePlayer.dead == true && thePlayer.protectd == false && thePlayer.rescued == false)
             {
-                Debug.Log(playersList[i].pname + " is dead!!");
+                Debug.Log(thePlayer.pname + " is dead!!");
             }
-            else
+            else if(thePlayer.charmed == true)
             {
-                Debug.Log(playersList[i].pname + " is not dead. Nothing to worry :)");
+                Debug.Log(thePlayer.pname + " is charmed!!");
+            }
+            else if(thePlayer.revealed == true)
+            {
+                Debug.Log(thePlayer.pname + " is revealed!!");
             }
         }       
     }
