@@ -27,11 +27,17 @@ public class panelManager : MonoBehaviour
     public void beginningOf()
     {
         List<GameObject> panels = createpanels.panels;
-        ClosePanel("startGame");
 
-        Debug.Log("gorko234 " + panels.Count);
-        panels[count].SetActive(true);
-        count++;
+        if (panels != null && count < panels.Count)
+        {
+            ClosePanel("startGame");
+            panels[count].SetActive(true);
+            count++;
+        }
+        else
+        {
+            Debug.LogWarning("Invalid panels list or count value. Check your initialization.");
+        }
     }
 
     public void passingPages()

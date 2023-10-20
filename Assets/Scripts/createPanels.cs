@@ -9,7 +9,6 @@ using System.Linq;
 
 public class createPanels : MonoBehaviour
 {
-    public GameObject morngPanel;
     private GameManager gameManager;
     public GameObject playerPanelPrefab;
     public GameObject transferPanelPrefab;
@@ -20,6 +19,8 @@ public class createPanels : MonoBehaviour
     private TextMeshProUGUI pNameText1, pNameText2, tNameText1, pRoleText1, pRoleText2, explanationText;
     public List<GameObject> panels = new List<GameObject>();
 
+    public GameObject infoPanel ;
+    public   GameObject morningPanel; 
     public GameObject circleButtonPrefab;
 
     // for clickable ptofile buttons
@@ -72,7 +73,7 @@ public class createPanels : MonoBehaviour
             Debug.LogError("Player panel prefab is null.");
             return;
         }
-
+        
         foreach (var player in playersList)
 
         {
@@ -160,7 +161,6 @@ public class createPanels : MonoBehaviour
 
                 if (playerPlane != null)
                 {
-                    setPlanes setPlaneScript = playerPanelPrefab.GetComponent<setPlanes>();
                     pNameText1 = playerPlane.transform.Find("nameText").GetComponent<TextMeshProUGUI>();
                     pRoleText2 = playerPlane.transform.Find("roleText").GetComponent<TextMeshProUGUI>();
                     explanationText = playerPlane.transform.Find("roleText").Find("roleInfo").GetComponent<TextMeshProUGUI>();
@@ -175,8 +175,16 @@ public class createPanels : MonoBehaviour
                     if (player.pname == playersList[playersList.Count - 1].pname)
                     {
                         ActualPlay Aplay = GetComponent<ActualPlay>();
-                        pickButton.onClick.AddListener(Aplay.afterPlayerAction);
-                        passButton.onClick.AddListener(Aplay.afterPlayerAction);
+                        if (Aplay != null)
+                        {
+                            pickButton.onClick.AddListener(Aplay.afterPlayerAction);
+                            passButton.onClick.AddListener(Aplay.afterPlayerAction);
+                        }
+                        else
+                        {
+                            Debug.Log("WOKEGEEE!");
+                        }
+                        
                     }
                     else
                     {
@@ -347,7 +355,7 @@ public class createPanels : MonoBehaviour
             }
         }
         
-        panels.Add(morngPanel);
+
         
     }
     public void changeToStart()
@@ -355,6 +363,9 @@ public class createPanels : MonoBehaviour
         GameObject closingpanel = GameObject.Find("introPanel");
         closingpanel.SetActive(false);
         openingpanel.SetActive(true);
+        if (infoPanel != null) panels.Add(infoPanel);
+        if (morningPanel != null) panels.Add(morningPanel);
+        Debug.Log("yoyoyo number is: " + panels.Count);
     }
 
 

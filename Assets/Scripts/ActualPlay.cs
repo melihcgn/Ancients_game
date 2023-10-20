@@ -4,16 +4,16 @@ using UnityEngine;
 using playerNS;
 public class ActualPlay : MonoBehaviour
 {
-    public GameObject scriptMoves;
     private createPanels cPanels;
     public void afterPlayerAction()
     {
         
-        cPanels = scriptMoves.GetComponent<createPanels>();
+        cPanels = GetComponent<createPanels>();
         List<Players> playersList = cPanels.ps;
 
         for (int i = 0; i < playersList.Count; i++)
         {
+            Debug.Log(  "worry about ya!!");
             Players thePlayer = playersList[i];
             if (thePlayer.dead == true && thePlayer.protectd == false && thePlayer.rescued == false)
             {

@@ -113,12 +113,16 @@ public class GameManager : MonoBehaviour
         neutralRoles.Add("AZMIC");
         neutralRoles.Add("GULYABANI");
         neutralRoles.Add("KORTIGES");
+        
 
+
+        
     }
     public void AccessTextListFromAnotherScript()
     {
         // Find the GameObject with the takingPNames script (you can also use other methods to find it)
         GameObject takingPNamesObject = GameObject.Find("scriptMoves2"); // Replace "NameListObject" with the actual GameObject name
+        createPanels createPlanezz = takingPNamesObject.GetComponent<createPanels>();
 
         // Check if the script component exists on the GameObject
         if (takingPNamesObject != null)
@@ -129,8 +133,7 @@ public class GameManager : MonoBehaviour
             {
                 // Now you can access the textList from the takingPNames script
                 List<string> textList = takingPNamesScript.textList;
-                int textListLength = textList.Count;
-
+                int textListLength = textList.Count; 
 
                 
                 if (textListLength >= 5 && textListLength <= 9)
@@ -181,6 +184,9 @@ public class GameManager : MonoBehaviour
                         playerSit.Add(player);
                         player.printPlayer();
                     }
+
+                    createPlanezz.Start();
+                    createPlanezz.changeToStart();
                     
                     
         // Generate a random number between 0 and 8

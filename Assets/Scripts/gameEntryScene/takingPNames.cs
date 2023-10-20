@@ -14,7 +14,7 @@ public class takingPNames : MonoBehaviour
         string inputText = inputField.text;
 
         // Check if the entered name already exists in the textList
-        if (!textList.Contains(inputText))
+        if (!textList.Contains(inputText) )
         {
             textList.Add(inputText);
             inputField.text = string.Empty;
