@@ -382,22 +382,27 @@ public class createPanels : MonoBehaviour
             Debug.Log("resmin var şuan elimde: " + choosingCell.pname);
             if (choosingCell.role == "MERGEN")
             {
+                choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.revealed = true;
             }
             else if (choosingCell.role == "Ulgen")
             {
+                choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.dead = true;
             }
             else if (choosingCell.role == "KIZAGAN")
             {
+                choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.changeDead(true);
             }
             else if (choosingCell.role == "UMAY")
             {
+                choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.changeDead(false);
             }
             else if (choosingCell.role == "BURKUT")
             {
+                choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.protectd = true;
             }
             else if (choosingCell.role == "OD ANA")
@@ -407,14 +412,16 @@ public class createPanels : MonoBehaviour
             }
             else if (choosingCell.role == "AKBUGA")
             {
+                choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.rescued = true;
             }
             else if (choosingCell.role == "AI TOYON")
             {
-                playerCell.revealed = true;
+                choosingCell.revealed = true;
             }
             else if (choosingCell.role == "AYZIT")
             {
+                choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.charmed = true;
             }
             else if (choosingCell.role == "ALAZ HAN")
@@ -433,10 +440,12 @@ public class createPanels : MonoBehaviour
             }
             else if (choosingCell.role == "TEPEGOZ")
             {
+                choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.changeDead(true);
             }
             else if (choosingCell.role == "DEMIRKIYNAK")
             {
+                choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.charmed = true;
             }
             else if (choosingCell.role == "SU IYESI")
@@ -467,10 +476,12 @@ public class createPanels : MonoBehaviour
             }
             else if (choosingCell.role == "GULYABANI")
             {
+                choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.changeDead(true);
             }
             else if (choosingCell.role == "KORTIGES")
             {
+                choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.kortigesed = true;
             }
             else
@@ -500,16 +511,19 @@ public class createPanels : MonoBehaviour
             Debug.Log("resmin var şuan elimde: " + choosingCell.pname);
             if (choosingCell.role == "Ulgen")
             {
+                choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.rescued = true;
             }
             
             else if (choosingCell.role == "SU IYESI")
             {
+                choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.markedSu = true;
             }
             
             else if (choosingCell.role == "GULYABANI")
             {
+                choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.changeDead(true);
             }
             else

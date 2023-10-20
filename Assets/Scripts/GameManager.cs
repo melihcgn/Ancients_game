@@ -20,6 +20,7 @@ namespace playerNS{
     public bool revealed;
     public bool markedSu;
     public bool kortigesed;
+    string visitedPlayer;
 
     // Default constructor
     public Players()
@@ -35,10 +36,11 @@ namespace playerNS{
         revealed = false;
         markedSu = false;
         kortigesed = false;
+        visitedPlayer = "";
     }
 
     // Parameterized constructor
-    public Players(string pn, string r, bool ch, bool pr, bool re, bool de, bool sh, bool si, bool rev, bool ms, bool kt)
+    public Players(string pn, string r, bool ch, bool pr, bool re, bool de, bool sh, bool si, bool rev, bool ms, bool kt, string vs)
     {
         pname = pn;
         role = r;
@@ -51,6 +53,7 @@ namespace playerNS{
         revealed = rev;
         markedSu = ms;
         kortigesed = kt;
+        visitedPlayer = vs;
     }
 
     public void printPlayer()
@@ -180,7 +183,7 @@ public class GameManager : MonoBehaviour
                     for (int i = 0; i < textListLength; i++)
                     {
                         string role = GetNextRole();
-                        Players player = new Players(textList[i], role, false, false, false, false, false, false, false, false, false);
+                        Players player = new Players(textList[i], role, false, false, false, false, false, false, false, false, false, "");
                         playerSit.Add(player);
                         player.printPlayer();
                     }
