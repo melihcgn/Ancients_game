@@ -97,7 +97,7 @@ public class createPanels : MonoBehaviour
 
                 for (int i = 0; i < pCount; i++)
                 {
-                    if (player.pname == "UMAY")
+                    if (player.role == "UMAY")
                     {
                         if (playersList[i].dead == true )
                         {
@@ -116,6 +116,7 @@ public class createPanels : MonoBehaviour
                             TextMeshProUGUI tmpText = circleButtonInstance.GetComponentInChildren<TextMeshProUGUI>();
                             tmpText.text = playersList[i].pname;
                             Button circleButton = circleButtonInstance.GetComponent<Button>();
+                            circleButton.name = playersList[i].pname + " button";
                             circleButton.onClick.AddListener(() => OnButtonClick(ref circleButton, playersList));
                             //making clickable
                         }
@@ -151,6 +152,7 @@ public class createPanels : MonoBehaviour
                 playerPlane.name = playerName;
                 string roleName = player.role;
                 playerPlane.SetActive(true);
+                transferPlane.name = playerName + " transition";
                 transferPlane.SetActive(true);
                 panels.Add(transferPlane);
                 panels.Add(playerPlane);
@@ -412,6 +414,7 @@ public class createPanels : MonoBehaviour
             }
             else if (choosingCell.role == "AKBUGA")
             {
+                
                 choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.rescued = true;
             }
@@ -431,6 +434,7 @@ public class createPanels : MonoBehaviour
             else if (choosingCell.role == "SIGUN GEYIK")
             {
                 //?
+                choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.changeDead(true);
             }
             else if (choosingCell.role == "YILDIZ HAN")

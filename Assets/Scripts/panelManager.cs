@@ -7,6 +7,7 @@ public class panelManager : MonoBehaviour
     private createPanels createpanels;
     public List<GameObject> panels;
     private int count;
+    private int prevPanelCount;
     public void Start()
     {
         count = 0;
@@ -43,6 +44,10 @@ public class panelManager : MonoBehaviour
     public void passingPages()
     {
         List<GameObject> panels = createpanels.panels;
+        if (prevPanelCount != 0 && prevPanelCount != panels.Count)
+        {
+            count = count + panels.Count - prevPanelCount;
+        }
         if(count < panels.Count)
         {
             panels[count-1].SetActive(false);
@@ -56,7 +61,7 @@ public class panelManager : MonoBehaviour
             panels[count].SetActive(true);
             count++;
         }
-        
+        prevPanelCount = panels.Count;
     }
 
 

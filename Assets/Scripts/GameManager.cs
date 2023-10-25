@@ -20,7 +20,7 @@ namespace playerNS{
     public bool revealed;
     public bool markedSu;
     public bool kortigesed;
-    string visitedPlayer;
+    public string visitedPlayer;
 
     // Default constructor
     public Players()
