@@ -21,6 +21,7 @@ namespace playerNS{
     public bool markedSu;
     public bool kortigesed;
     public string visitedPlayer;
+    public string action; 
 
     // Default constructor
     public Players()
@@ -37,10 +38,11 @@ namespace playerNS{
         markedSu = false;
         kortigesed = false;
         visitedPlayer = "";
+        action = "";
     }
 
     // Parameterized constructor
-    public Players(string pn, string r, bool ch, bool pr, bool re, bool de, bool sh, bool si, bool rev, bool ms, bool kt, string vs)
+    public Players(string pn, string r, bool ch, bool pr, bool re, bool de, bool sh, bool si, bool rev, bool ms, bool kt, string vs, string act)
     {
         pname = pn;
         role = r;
@@ -54,6 +56,7 @@ namespace playerNS{
         markedSu = ms;
         kortigesed = kt;
         visitedPlayer = vs;
+        action = act;
     }
 
     public void printPlayer()
@@ -168,6 +171,7 @@ public class GameManager : MonoBehaviour
                         tempRole = badRoles[randomNumber];
                         RemoveElementAtIndex(randomNumber, badRoles);
                         availableRoles.Add(tempRole);
+                        numberBad = badRoles.Count;
                     }
                     int numberNeutral = neutralRoles.Count;
                     if (textListLength > 5)
@@ -183,12 +187,12 @@ public class GameManager : MonoBehaviour
                     for (int i = 0; i < textListLength; i++)
                     {
                         string role = GetNextRole();
-                        Players player = new Players(textList[i], role, false, false, false, false, false, false, false, false, false, "");
+                        Players player = new Players(textList[i], role, false, false, false, false, false, false, false, false, false, "", "");
                         playerSit.Add(player);
                         player.printPlayer();
                     }
 
-                    createPlanezz.Start();
+                    createPlanezz.SetupPlayerPanels(playerSit);
                     createPlanezz.changeToStart();
                     
                     

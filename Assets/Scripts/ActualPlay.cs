@@ -9,6 +9,7 @@ public class ActualPlay : MonoBehaviour
 {
     private createPanels cPanels;
     List<Players> deadPlayers = new List<Players>();
+    List<Players> killPlayers = new List<Players>();
     List<GameObject> deadPanels = new List<GameObject>();
     public void afterPlayerAction()
     {
@@ -20,27 +21,77 @@ public class ActualPlay : MonoBehaviour
 
         List<Players> playersList = cPanels.ps;
 
-        
+        int pListCount = playersList.Count;
 
-        for (int i = 0; i < playersList.Count; i++)
+        for (int i = 0; i < pListCount; i++)
+        {
+            Players thePlayer = playersList[i];
+            if (thePlayer.charmed == true)
+            {
+                if ( thePlayer.visitedPlayer!= "" && thePlayer.action != "")
+                {
+
+                    Players deniedPlayer = playersList.FirstOrDefault(obj => obj.pname == thePlayer.visitedPlayer);
+                    if (thePlayer.action == "kill")
+                    {
+                        deniedPlayer.dead = false;
+                    }
+                    else if (thePlayer.action == "protect")
+                    {
+                        deniedPlayer.protectd = false;
+                    }
+                    else if (thePlayer.action == "rescue")
+                    {
+                        deniedPlayer.rescued = false;
+                    }
+                    else if (thePlayer.action == "reveal")
+                    {
+                        if (thePlayer.role == "AI TOYON")
+                        {
+                            thePlayer.revealed = false;
+                        }
+                        else if (thePlayer.role == "AI TOYON")
+                        {
+                            deniedPlayer.revealed = false;
+
+                        }
+                    }
+                    else if (thePlayer.action == "charm")
+                    {
+                        deniedPlayer.charmed = false;
+                    }
+                    else
+                    {
+
+                    }
+                }
+                Debug.Log(thePlayer.pname + " is charmed!!");
+                thePlayer.charmed = false;
+            }
+
+        }
+
+        for (int i = 0; i < pListCount; i++)
         {
             Debug.Log(  "worry about ya!!");
             Players thePlayer = playersList[i];
             // checking he is dead or not
             if (thePlayer.dead == true && thePlayer.protectd == false && thePlayer.rescued == false)
+        
             {
                 
                 string thePlayerName = thePlayer.pname;
                 if (playersList.Contains(thePlayer))
                 {
-                    playersList.Remove(thePlayer);
+                    killPlayers.Add(thePlayer);
                     Debug.Log("Removed: " + thePlayerName);
+                     Debug.Log(thePlayerName + " is dead!!");
+                    GameObject deadPlayer = panels.FirstOrDefault(obj => obj.name == thePlayer.pname);
+                    deadPlayers.Add(thePlayer);
+                    deadPanels.Add(panels[2 * i]);
+                    deadPanels.Add(panels[2 * i +1]);
                 }
-                Debug.Log(thePlayerName + " is dead!!");
-                GameObject deadPlayer = panels.FirstOrDefault(obj => obj.name == thePlayer.pname);
-                deadPlayers.Add(thePlayer);
-                deadPanels.Add(panels[2 * i]);
-                deadPanels.Add(panels[2 * i +1]);
+               
                 
                 for (int m = 0; m < panels.Count; m++)
                 {
@@ -83,20 +134,67 @@ public class ActualPlay : MonoBehaviour
                     Debug.Log("WOKEGEEE!");
                 }
             }
+            
             else
             {
-                 if (thePlayer.charmed == true)
+                
+                if (thePlayer.dead == true && thePlayer.protectd == true)
                 {
-                    Debug.Log(thePlayer.pname + " is charmed!!");
+                    int count = 0;
+                    for (int k = 0; k < pListCount; k++)
+                    {
+                        Players visitingPlayer = playersList[k];
+                        if (visitingPlayer.visitedPlayer == thePlayer.pname)
+                        {
+                            deadPlayers.Add(visitingPlayer);
+                            killPlayers.Add(visitingPlayer);
+                            deadPanels.Add(panels[2 * (k-count)]);
+                            deadPanels.Add(panels[2 * (k-count) +1]);
+                            panels.RemoveAt(2 * (k-count));
+                            panels.RemoveAt(2 * (k-count) +1);
+                            count++;
+                            if (count == 2)
+                            {
+                                break;
+                            }
+                        } 
+                    }
+                    thePlayer.dead = false;
+                    thePlayer.protectd = false;
+                    Debug.Log(thePlayer.pname + " is protected!");
                 }
+
+                else if (thePlayer.dead == true && thePlayer.rescued == true)
+                {
+                    thePlayer.dead = false;
+                    thePlayer.protectd = false;
+                    Debug.Log(thePlayer.pname + " is rescued!");
+                }
+
+                
                 else if(thePlayer.revealed == true)
                 {
-                    Debug.Log(thePlayer.pname + " is revealed!!");
+                    if (thePlayer.role == "AI TOYON")
+                        {
+                            Debug.Log(thePlayer.pname + " revealed himself!! His role is " + thePlayer.role);
+                        }
+                        else 
+                        {
+                           Debug.Log(thePlayer.pname + " is revealed!! His role is " + thePlayer.role);
+
+                        }
+                    
                 }
             }
 
             
-        }       
+        }    
+
+        for (int p = 0; p < killPlayers.Count; p++)
+        {
+            playersList.Remove(killPlayers[p]);
+        }   
+        killPlayers.Clear();
     }
 
     void FindObjectWithSpecificTextInChildren(Transform parentTransform, string nameToDelete)

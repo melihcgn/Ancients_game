@@ -50,8 +50,6 @@ public class createPanels : MonoBehaviour
                 {
                     Debug.Log("Player name: " + player.pname);
                 }
-
-                SetupPlayerPanels(players);
             }
             else
             {
@@ -73,7 +71,8 @@ public class createPanels : MonoBehaviour
             Debug.LogError("Player panel prefab is null.");
             return;
         }
-        
+
+
         foreach (var player in playersList)
 
         {
@@ -99,7 +98,7 @@ public class createPanels : MonoBehaviour
                 {
                     if (player.role == "UMAY")
                     {
-                        if (playersList[i].dead == true )
+                        if (playersList[i].dead == true)
                         {
                             // Calculate row and column indices for the button
                             int row = (i + dummy) / maxButtonsPerRow;
@@ -148,6 +147,9 @@ public class createPanels : MonoBehaviour
 
                 }
 
+
+
+
                 string playerName = player.pname;
                 playerPlane.name = playerName;
                 string roleName = player.role;
@@ -186,7 +188,7 @@ public class createPanels : MonoBehaviour
                         {
                             Debug.Log("WOKEGEEE!");
                         }
-                        
+
                     }
                     else
                     {
@@ -197,7 +199,7 @@ public class createPanels : MonoBehaviour
                     Button seeButton = transferPlane.transform.Find("seeButton").GetComponent<Button>();
                     seeButton.onClick.AddListener(pManager.passingPages);
                     TextMeshProUGUI buttonText = pickButton.GetComponentInChildren<TextMeshProUGUI>();
-                    
+
                     Button inactiveButton = playerPlane.transform.Find("extraButton").GetComponent<Button>();
                     inactiveButton.interactable = false;
 
@@ -211,7 +213,7 @@ public class createPanels : MonoBehaviour
                     else if (roleName == "Ulgen")
                     {
                         inactiveButton.interactable = true;
-                        
+
                         TextMeshProUGUI extraButtonText = inactiveButton.GetComponentInChildren<TextMeshProUGUI>();
                         extraButtonText.text = "Bless";
                         buttonText.text = "Strike";
@@ -236,7 +238,7 @@ public class createPanels : MonoBehaviour
                     }
                     else if (roleName == "OD ANA")
                     {
-                       
+
                     }
                     else if (roleName == "AKBUGA")
                     {
@@ -269,7 +271,7 @@ public class createPanels : MonoBehaviour
                     else if (roleName == "YILDIZ HAN")
                     {
                         explanationText.text = "Zekasıyla araştırdıkları kişilerin ruhunu görebilirler.";
-                        
+
                         buttonText.text = "Investigate";
                     }
                     else if (roleName == "TEPEGOZ")
@@ -314,7 +316,7 @@ public class createPanels : MonoBehaviour
                         TextMeshProUGUI extraButtonText = inactiveButton.GetComponentInChildren<TextMeshProUGUI>();
                         extraButtonText.text = "Howl";
                         buttonText.text = "Kill";
-                        inactiveButton.onClick.AddListener(() => changeStatusDifferent(player.role ,extraButtonText.text));
+                        inactiveButton.onClick.AddListener(() => changeStatusDifferent(player.role, extraButtonText.text));
                         inactiveButton.onClick.AddListener(pManager.passingPages);
 
                     }
@@ -356,17 +358,97 @@ public class createPanels : MonoBehaviour
                 Debug.LogError("Player panel prefab is null.");
             }
         }
-        
 
         
+
+        if (infoPanel != null) panels.Add(infoPanel);
+        if (morningPanel != null) panels.Add(morningPanel);
+
+        //VOTING PANEL
+        if (true)
+        {
+            // OYLAMA BÖLÜMÜ
+            GameObject votePlane = Instantiate(playerPanelPrefab, spawnPosition, Quaternion.identity, canvas);
+            GameObject decidePlane = Instantiate(playerPanelPrefab, spawnPosition, Quaternion.identity, canvas);
+            Transform voteNames = votePlane.transform.Find("Names");
+
+            // Calculate the width of a single button
+            float votebuttonWidth = circleButtonPrefab.GetComponent<RectTransform>().rect.width;
+            // Set the maximum buttons per row
+            int maxVoteButtonsPerRow = 3;
+
+            // Calculate the spacing between buttons to fit them in a row
+            float voteSpacing = votebuttonWidth * maxVoteButtonsPerRow / 3 * 2;
+            int votepCount = playersList.Count;
+
+            int dummyVar = 0;
+
+            for (int i = 0; i < votepCount; i++)
+            {
+
+
+                // Calculate row and column indices for the button
+                int row = (i + dummyVar) / maxVoteButtonsPerRow;
+                int col = (i + dummyVar) % maxVoteButtonsPerRow;
+
+                // Calculate the position with appropriate spacing
+                Vector3 buttonPosition = new Vector3(
+                    voteNames.position.x + (col) * votebuttonWidth * 2 - voteSpacing,
+                    voteNames.position.y - (row - 1) * votebuttonWidth * 2,
+                    voteNames.position.z);
+
+                // Instantiate the button at the calculated position
+                GameObject circleButtonInstance = Instantiate(circleButtonPrefab, buttonPosition, Quaternion.identity, voteNames);
+                TextMeshProUGUI tmpText = circleButtonInstance.GetComponentInChildren<TextMeshProUGUI>();
+                tmpText.text = playersList[i].pname;
+                Button circleButton = circleButtonInstance.GetComponent<Button>();
+                circleButton.onClick.AddListener(() => OnButtonClick(ref circleButton, playersList));
+                //making clickable
+
+
+            }
+            votePlane.name = "voting";
+            decidePlane.name = "deciding";
+
+            votePlane.SetActive(true);
+            if (selectedButton != null)
+            {
+                
+            }
+            decidePlane.SetActive(false);
+
+
+            panels.Add(votePlane);
+            //panels.Add(decidePlane);
+            votePlane.SetActive(false);
+            Debug.Log("gorko33 " + panels.Count);
+
+
+
+            pNameText1 = votePlane.transform.Find("nameText").GetComponent<TextMeshProUGUI>();
+            pRoleText2 = votePlane.transform.Find("roleText").GetComponent<TextMeshProUGUI>();
+            explanationText = votePlane.transform.Find("roleText").Find("roleInfo").GetComponent<TextMeshProUGUI>();
+            Button votepassButton = votePlane.transform.Find("passButton").GetComponent<Button>();
+            Button votepickButton = votePlane.transform.Find("pickButton").GetComponent<Button>();
+            panelManager pManagerFV = GetComponent<panelManager>();
+            votepassButton.onClick.AddListener(pManagerFV.passingPages);
+            //votepickButton.onClick.AddListener(() => changeStatus(player.role));
+            votepickButton.onClick.AddListener(pManagerFV.passingPages);
+            votepickButton.name = "Put";
+            pNameText1.text = "The chosen will be put on the dais";
+            pRoleText2.text = "SOULS CAN PUT A BODY ON THE DAIS";
+
+
+        }
+
+
     }
     public void changeToStart()
     {
         GameObject closingpanel = GameObject.Find("introPanel");
         closingpanel.SetActive(false);
         openingpanel.SetActive(true);
-        if (infoPanel != null) panels.Add(infoPanel);
-        if (morningPanel != null) panels.Add(morningPanel);
+        
         Debug.Log("yoyoyo number is: " + panels.Count);
     }
 
@@ -386,71 +468,87 @@ public class createPanels : MonoBehaviour
             {
                 choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.revealed = true;
+                
+                choosingCell.action = "reveal";
             }
             else if (choosingCell.role == "Ulgen")
             {
                 choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.dead = true;
+                choosingCell.action = "kill";
             }
             else if (choosingCell.role == "KIZAGAN")
             {
                 choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.changeDead(true);
+                choosingCell.action = "kill";
             }
             else if (choosingCell.role == "UMAY")
             {
                 choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.changeDead(false);
+                choosingCell.action = "kill";
             }
             else if (choosingCell.role == "BURKUT")
             {
                 choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.protectd = true;
+                choosingCell.action = "protect";
             }
             else if (choosingCell.role == "OD ANA")
             {
                 //?
+                choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.changeDead(true);
+                choosingCell.action = "kill";
             }
             else if (choosingCell.role == "AKBUGA")
             {
                 
                 choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.rescued = true;
+                choosingCell.action = "rescue";
             }
             else if (choosingCell.role == "AI TOYON")
             {
                 choosingCell.revealed = true;
+                choosingCell.action = "reveal";
             }
             else if (choosingCell.role == "AYZIT")
             {
                 choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.charmed = true;
+                choosingCell.action = "charm";
             }
             else if (choosingCell.role == "ALAZ HAN")
             {
                 choosingCell.rescued = true;
+                choosingCell.action = "rescue";
             }
             else if (choosingCell.role == "SIGUN GEYIK")
             {
                 //?
                 choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.changeDead(true);
+                choosingCell.action = "kill";
             }
             else if (choosingCell.role == "YILDIZ HAN")
             {
                 //?
                 playerCell.changeDead(true);
+                choosingCell.action = "kill";
             }
             else if (choosingCell.role == "TEPEGOZ")
             {
                 choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.changeDead(true);
+                choosingCell.action = "kill";
             }
             else if (choosingCell.role == "DEMIRKIYNAK")
             {
                 choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.charmed = true;
+                choosingCell.action = "charm";
             }
             else if (choosingCell.role == "SU IYESI")
             {
@@ -460,6 +558,7 @@ public class createPanels : MonoBehaviour
                     if (markedPlayer.markedSu == true)
                     {
                         ps[i].dead = true;
+                        choosingCell.action = "kill";
                     }
                 }
             }
@@ -467,26 +566,31 @@ public class createPanels : MonoBehaviour
             {
                 //?
                 playerCell.changeDead(true);
+                choosingCell.action = "kill";
             }
             else if (choosingCell.role == "ARCURA")
             {
                 //?
                 playerCell.changeDead(true);
+                choosingCell.action = "kill";
             }
             else if (choosingCell.role == "AZMIC")
             {
                 //?
                 playerCell.changeDead(true);
+                choosingCell.action = "kill";
             }
             else if (choosingCell.role == "GULYABANI")
             {
                 choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.changeDead(true);
+                choosingCell.action = "kill";
             }
             else if (choosingCell.role == "KORTIGES")
             {
                 choosingCell.visitedPlayer = playerCell.pname; 
                 playerCell.kortigesed = true;
+                choosingCell.action = "kortiges";
             }
             else
             {
