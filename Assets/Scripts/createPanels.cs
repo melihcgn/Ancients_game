@@ -1,6 +1,7 @@
 using System.Collections;
+using UnityEngine;  
 using System.Collections.Generic;
-using UnityEngine;
+
 using playerNS;
 using TMPro;
 using UnityEngine.UI;
@@ -18,7 +19,7 @@ public class createPanels : MonoBehaviour
     public GameObject openingpanel;
     private TextMeshProUGUI pNameText1, pNameText2, tNameText1, pRoleText1, pRoleText2, explanationText;
     public List<GameObject> panels = new List<GameObject>();
-
+    public List<GameObject> playerPanels = new List<GameObject>();
     public GameObject infoPanel ;
     public   GameObject morningPanel; 
     public GameObject circleButtonPrefab;
@@ -31,8 +32,8 @@ public class createPanels : MonoBehaviour
     public List<Players> ps = new List<Players>();
 
     public Button selectedButton;
-
-
+    public Button votingButton;
+    private ActualPlay Aplay;
     public void Start()
     {
         GameObject gameManagerObject = GameObject.Find("scriptMoves2");
@@ -41,12 +42,12 @@ public class createPanels : MonoBehaviour
         {
             gameManager = gameManagerObject.GetComponent<GameManager>();
 
-            if (gameManager != null)
+            if (gameManager != null)    
             {
                 List<Players> players = gameManager.playerSit;
                 ps = players;
 
-                foreach (Players player in players)
+                foreach (Players player in ps)
                 {
                     Debug.Log("Player name: " + player.pname);
                 }
@@ -156,6 +157,8 @@ public class createPanels : MonoBehaviour
                 playerPlane.SetActive(true);
                 transferPlane.name = playerName + " transition";
                 transferPlane.SetActive(true);
+                playerPanels.Add(transferPlane);
+                playerPanels.Add(playerPlane);
                 panels.Add(transferPlane);
                 panels.Add(playerPlane);
                 transferPlane.SetActive(false);
@@ -365,99 +368,115 @@ public class createPanels : MonoBehaviour
         if (morningPanel != null) panels.Add(morningPanel);
 
         //VOTING PANEL
-        if (true)
-        {
-            // OYLAMA BÖLÜMÜ
-            GameObject votePlane = Instantiate(playerPanelPrefab, spawnPosition, Quaternion.identity, canvas);
-            GameObject decidePlane = Instantiate(playerPanelPrefab, spawnPosition, Quaternion.identity, canvas);
-            Transform voteNames = votePlane.transform.Find("Names");
-
-            // Calculate the width of a single button
-            float votebuttonWidth = circleButtonPrefab.GetComponent<RectTransform>().rect.width;
-            // Set the maximum buttons per row
-            int maxVoteButtonsPerRow = 3;
-
-            // Calculate the spacing between buttons to fit them in a row
-            float voteSpacing = votebuttonWidth * maxVoteButtonsPerRow / 3 * 2;
-            int votepCount = playersList.Count;
-
-            int dummyVar = 0;
-
-            for (int i = 0; i < votepCount; i++)
-            {
-
-
-                // Calculate row and column indices for the button
-                int row = (i + dummyVar) / maxVoteButtonsPerRow;
-                int col = (i + dummyVar) % maxVoteButtonsPerRow;
-
-                // Calculate the position with appropriate spacing
-                Vector3 buttonPosition = new Vector3(
-                    voteNames.position.x + (col) * votebuttonWidth * 2 - voteSpacing,
-                    voteNames.position.y - (row - 1) * votebuttonWidth * 2,
-                    voteNames.position.z);
-
-                // Instantiate the button at the calculated position
-                GameObject circleButtonInstance = Instantiate(circleButtonPrefab, buttonPosition, Quaternion.identity, voteNames);
-                TextMeshProUGUI tmpText = circleButtonInstance.GetComponentInChildren<TextMeshProUGUI>();
-                tmpText.text = playersList[i].pname;
-                Button circleButton = circleButtonInstance.GetComponent<Button>();
-                circleButton.onClick.AddListener(() => OnButtonClick(ref circleButton, playersList));
-                //making clickable
-
-
-            }
-            votePlane.name = "voting";
-            decidePlane.name = "deciding";
-
-            votePlane.SetActive(true);
-            if (selectedButton != null)
-            {
-                
-            }
-            decidePlane.SetActive(false);
-
-
-            panels.Add(votePlane);
+        string voteName = "voting";
+        string decideName = "deciding";
+        GameObject votePlane = createOnePanel(voteName, playersList, panels);   
+        panels.Add(votePlane);
+        votePlane.SetActive(false);            
             //panels.Add(decidePlane);
-            votePlane.SetActive(false);
             Debug.Log("gorko33 " + panels.Count);
 
 
 
-            pNameText1 = votePlane.transform.Find("nameText").GetComponent<TextMeshProUGUI>();
-            pRoleText2 = votePlane.transform.Find("roleText").GetComponent<TextMeshProUGUI>();
-            explanationText = votePlane.transform.Find("roleText").Find("roleInfo").GetComponent<TextMeshProUGUI>();
-            Button votepassButton = votePlane.transform.Find("passButton").GetComponent<Button>();
-            Button votepickButton = votePlane.transform.Find("pickButton").GetComponent<Button>();
-            panelManager pManagerFV = GetComponent<panelManager>();
-            votepassButton.onClick.AddListener(pManagerFV.passingPages);
-            //votepickButton.onClick.AddListener(() => changeStatus(player.role));
-            votepickButton.onClick.AddListener(pManagerFV.passingPages);
-            votepickButton.name = "Put";
-            pNameText1.text = "The chosen will be put on the dais";
-            pRoleText2.text = "SOULS CAN PUT A BODY ON THE DAIS";
+            
 
 
         }
 
 
+
+    
+
+    
+
+
+    
+   
+
+    public void putOnDais()
+    {
+        if (selectedButton != null)
+        {
+            TextMeshProUGUI buttonText = selectedButton.GetComponentInChildren<TextMeshProUGUI>();
+            Players playerCell = new Players();
+            playerCell = ps.FirstOrDefault(players => players.pname == buttonText.text);
+        }
+
+    }
+    public GameObject createOnePanel(string panelName , List<Players> playersList, List<GameObject> panels)
+    {
+        GameObject votePlane = Instantiate(playerPanelPrefab, spawnPosition, Quaternion.identity, canvas);
+        Transform voteNames = votePlane.transform.Find("Names");
+
+        // Calculate the width of a single button
+        float votebuttonWidth = circleButtonPrefab.GetComponent<RectTransform>().rect.width;
+        // Set the maximum buttons per row
+        int maxVoteButtonsPerRow = 3;
+
+        // Calculate the spacing between buttons to fit them in a row
+        float voteSpacing = votebuttonWidth * maxVoteButtonsPerRow / 3 * 2;
+        int votepCount = playersList.Count;
+
+        int dummyVar = 0;
+        if (panelName == "voting")
+        {
+            for (int i = 0; i < votepCount; i++)
+                {
+
+
+                    // Calculate row and column indices for the button
+                    int row = (i + dummyVar) / maxVoteButtonsPerRow;
+                    int col = (i + dummyVar) % maxVoteButtonsPerRow;
+
+                    // Calculate the position with appropriate spacing
+                    Vector3 buttonPosition = new Vector3(
+                        voteNames.position.x + (col) * votebuttonWidth * 2 - voteSpacing,
+                        voteNames.position.y - (row - 1) * votebuttonWidth * 2,
+                        voteNames.position.z);
+
+                    // Instantiate the button at the calculated position
+                    GameObject circleButtonInstance = Instantiate(circleButtonPrefab, buttonPosition, Quaternion.identity, voteNames);
+                    TextMeshProUGUI tmpText = circleButtonInstance.GetComponentInChildren<TextMeshProUGUI>();
+                    tmpText.text = playersList[i].pname;
+                    Button circleButton = circleButtonInstance.GetComponent<Button>();
+                    circleButton.onClick.AddListener(() => VoteOnButtonClick(ref circleButton, playersList));
+                    
+                    //making clickable
+
+
+                }
+                string playerName ="deneiyoz hoca";
+                TextMeshProUGUI pNameText1 = votePlane.transform.Find("nameText").GetComponent<TextMeshProUGUI>();
+                TextMeshProUGUI pRoleText2 = votePlane.transform.Find("roleText").GetComponent<TextMeshProUGUI>();
+                TextMeshProUGUI explanationText = votePlane.transform.Find("roleText").Find("roleInfo").GetComponent<TextMeshProUGUI>();
+                Button votepassButton = votePlane.transform.Find("passButton").GetComponent<Button>();
+                Button votepickButton = votePlane.transform.Find("pickButton").GetComponent<Button>();
+                panelManager pManagerFV = GetComponent<panelManager>();
+                votepassButton.onClick.AddListener(pManagerFV.passingPages);
+                votepickButton.onClick.AddListener(() =>  createTemporaryPanel( panelName,  playerName,  playersList , panels));
+                votepickButton.name = "Put";
+                pNameText1.text = "The chosen will be put on the dais";
+                pRoleText2.text = "SOULS CAN PUT A BODY ON THE DAIS";
+        }
+        
+        votePlane.name = panelName + " 1";
+        return votePlane;
     }
     public void changeToStart()
     {
-        GameObject closingpanel = GameObject.Find("introPanel");
-        closingpanel.SetActive(false);
-        openingpanel.SetActive(true);
+         GameObject closingpanel = GameObject.Find("introPanel");
+         closingpanel.SetActive(false);
+         openingpanel.SetActive(true);
         
-        Debug.Log("yoyoyo number is: " + panels.Count);
-    }
-
+         Debug.Log("yoyoyo number is: " + panels.Count);
+     }
 
     public void changeStatus(string ExeRole)
     {
         if (selectedButton != null)
         {
             TextMeshProUGUI buttonText = selectedButton.GetComponentInChildren<TextMeshProUGUI>();
+            Debug.Log("sdfsdf=  " + ps[0].pname);
             Debug.Log("sdfsdf=  " + ps[0].pname + " DSFDS " + ExeRole);
             Players playerCell = new Players();
             playerCell = ps.FirstOrDefault(players => players.pname == buttonText.text);
@@ -610,6 +629,7 @@ public class createPanels : MonoBehaviour
     {
         if (selectedButton != null)
         {
+            Debug.Log("ps count=  " + ps.Count + " DSFDS " + ExeRole);
             TextMeshProUGUI buttonText = selectedButton.GetComponentInChildren<TextMeshProUGUI>();
             Debug.Log("sdfsdf=  " + ps[0].pname + " DSFDS " + ExeRole);
             Players playerCell = new Players();
@@ -654,4 +674,78 @@ public class createPanels : MonoBehaviour
         TextMeshProUGUI buttonText = selectedButton.GetComponentInChildren<TextMeshProUGUI>();
         //Debug.Log("DUR BAKIMMM : " + buttonText.text);
     }
+
+    private void VoteOnButtonClick(ref Button clickedButton, List<Players> ps)
+    {
+        votingButton = clickedButton;
+        TextMeshProUGUI buttonText = votingButton.GetComponentInChildren<TextMeshProUGUI>();
+        //Debug.Log("DUR BAKIMMM : " + buttonText.text);
+    }
+    private void createTemporaryPanel(string panelName, string playerName, List<Players> ps , List<GameObject> panels)
+    {
+        if (votingButton != null)
+        {
+            Aplay = GetComponent<ActualPlay>();
+            TextMeshProUGUI buttonText = votingButton.GetComponentInChildren<TextMeshProUGUI>();
+            GameObject tempPlane = Instantiate(playerPanelPrefab, spawnPosition, Quaternion.identity, canvas);
+            Transform voteNames = tempPlane.transform.Find("Names");
+
+            // Calculate the width of a single button
+            float votebuttonWidth = circleButtonPrefab.GetComponent<RectTransform>().rect.width;
+            // Set the maximum buttons per row
+            int maxVoteButtonsPerRow = 3;
+
+            // Calculate the spacing between buttons to fit them in a row
+            float voteSpacing = votebuttonWidth * maxVoteButtonsPerRow / 3 * 2;
+            int votepCount = ps.Count;
+            
+            int dummyVar = 0;
+            TextMeshProUGUI pNameText1 = tempPlane.transform.Find("nameText").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI pRoleText2 = tempPlane.transform.Find("roleText").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI explanationText = tempPlane.transform.Find("roleText").Find("roleInfo").GetComponent<TextMeshProUGUI>();
+            Button killVoteButton = tempPlane.transform.Find("passButton").GetComponent<Button>();
+            Button cancelVoteButton = tempPlane.transform.Find("pickButton").GetComponent<Button>();
+
+            panelManager pManagerFV = GetComponent<panelManager>();
+            TextMeshProUGUI killVoteText = killVoteButton.GetComponentInChildren<TextMeshProUGUI>();
+            TextMeshProUGUI cancelVoteText = cancelVoteButton.GetComponentInChildren<TextMeshProUGUI>();
+            killVoteText.text = "Execute";
+            cancelVoteText.text = "Forgive";
+            string killableName =  buttonText.text;
+            pNameText1.text = "Do you want to execute " + killableName + "\n(It needs to " + (ps.Count / 2 +1) + " votes to execute)";
+            pRoleText2.text = "EXECUTION";
+            tempPlane.name = panelName;
+            tempPlane.SetActive(true);
+            cancelVoteButton.onClick.AddListener(() => tempPlane.SetActive(false));
+            killVoteButton.onClick.AddListener(() => Aplay.killVotedPlayer(killableName) );
+            killVoteButton.onClick.AddListener(() => tempPlane.SetActive(false));
+            killVoteButton.onClick.AddListener(pManagerFV.passingPages);
+            cancelVoteButton.onClick.AddListener(pManagerFV.passingPages);
+            votingButton = null;
+        }
+        
+        
+        
+
+    }
+    private void killWithVote(string killedByVote,List<Players> ps , List<GameObject> panels)
+        {
+            
+            Players playerCell = new Players();
+            playerCell = ps.FirstOrDefault(players => players.pname == killedByVote);
+            playerCell.changeDead(true);
+
+            for (int m = 0; m < panels.Count; m++)
+                {
+                    if (panels[m].name == killedByVote)
+                    {
+                        panels.RemoveAt(m);
+                        panels.RemoveAt(m-1);
+                    }
+                }
+            
+        }
+        
+
+
 }

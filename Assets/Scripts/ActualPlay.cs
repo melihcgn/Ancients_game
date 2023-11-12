@@ -18,8 +18,11 @@ public class ActualPlay : MonoBehaviour
         cPanels = GetComponent<createPanels>();
 
         List<GameObject> panels = cPanels.panels;
+        List<GameObject> playerPanels = cPanels.playerPanels;
 
         List<Players> playersList = cPanels.ps;
+
+        
 
         int pListCount = playersList.Count;
 
@@ -121,8 +124,8 @@ public class ActualPlay : MonoBehaviour
                     
 
                 }
-                Button passButton = panels[panels.Count -3].transform.Find("passButton").GetComponent<Button>();
-                Button pickButton = panels[panels.Count -3].transform.Find("pickButton").GetComponent<Button>();
+                Button passButton = playerPanels[playerPanels.Count -1].transform.Find("passButton").GetComponent<Button>();
+                Button pickButton = playerPanels[playerPanels.Count -1].transform.Find("pickButton").GetComponent<Button>();
                 ActualPlay Aplay = GetComponent<ActualPlay>();
                 if (Aplay != null)
                 {
@@ -197,6 +200,74 @@ public class ActualPlay : MonoBehaviour
         killPlayers.Clear();
     }
 
+
+    public void killVotedPlayer(string playerWillKilled)
+    {
+        cPanels = GetComponent<createPanels>();
+
+        List<GameObject> panels = cPanels.panels;
+        List<GameObject> playerPanels = cPanels.playerPanels;
+
+        List<Players> playersList = cPanels.ps;
+        int pListCount = playersList.Count;
+
+        Players thePlayer = playersList.FirstOrDefault(obj => obj.pname == playerWillKilled);
+        GameObject thePlayerPanel = panels.FirstOrDefault(obj => obj.name == playerWillKilled);
+        killPlayers.Add(thePlayer);
+        Debug.Log("Removed: " + playerWillKilled);
+        Debug.Log(playerWillKilled + " is dead!!");
+                    
+        deadPlayers.Add(thePlayer);
+        
+        for (int m = 0; m < panels.Count; m++)
+                {
+                    if (panels[m].name == playerWillKilled)
+                    {
+                        deadPanels.Add(panels[2 * m]);
+                        deadPanels.Add(panels[2 * m +1]);
+                        panels.RemoveAt(m);
+                        panels.RemoveAt(m-1);
+                        break;
+                    }
+                }
+        for (int k = 1; k < panels.Count; k = k + 2)
+                {
+
+                        //GameObject otherPlayer = panels.FirstOrDefault(obj => obj.name == playersList[k].pname);
+                    GameObject otherPlayer = panels[k];
+                    Transform otherPlayerTransform = otherPlayer.transform;
+                    GameObject profilesObject = otherPlayerTransform.Find("Names").gameObject;
+                    if (profilesObject != null)
+                    {
+                        FindObjectWithSpecificTextInChildren(profilesObject.transform, playerWillKilled);
+                    }
+                    else
+                    {
+                        Debug.Log("caba caba abaa");
+                    }
+                    
+
+                }
+                Button passButton = playerPanels[playerPanels.Count -1].transform.Find("passButton").GetComponent<Button>();
+                Button pickButton = playerPanels[playerPanels.Count -1].transform.Find("pickButton").GetComponent<Button>();
+                ActualPlay Aplay = GetComponent<ActualPlay>();
+                if (Aplay != null)
+                {
+                    pickButton.onClick.AddListener(Aplay.afterPlayerAction);
+                    passButton.onClick.AddListener(Aplay.afterPlayerAction);
+                }
+                else
+                {
+                    Debug.Log("WOKEGEEE!");
+                }
+        
+
+        for (int p = 0; p < killPlayers.Count; p++)
+        {
+            playersList.Remove(killPlayers[p]);
+        }   
+        killPlayers.Clear();
+    }
     void FindObjectWithSpecificTextInChildren(Transform parentTransform, string nameToDelete)
     {
 
