@@ -7,22 +7,23 @@ using TMPro;
 using UnityEngine.UI;
 public class ActualPlay : MonoBehaviour
 {
+    
     private createPanels cPanels;
-    List<Players> deadPlayers = new List<Players>();
+    public List<Players> deadPlayers = new List<Players>();
     List<Players> killPlayers = new List<Players>();
     List<GameObject> deadPanels = new List<GameObject>();
     public void afterPlayerAction()
     {
-        
-        
+
+
         cPanels = GetComponent<createPanels>();
 
         List<GameObject> panels = cPanels.panels;
         List<GameObject> playerPanels = cPanels.playerPanels;
-
+        GameObject votingPanel = cPanels.votingPanelTo;
         List<Players> playersList = cPanels.ps;
 
-        
+
 
         int pListCount = playersList.Count;
 
@@ -31,7 +32,7 @@ public class ActualPlay : MonoBehaviour
             Players thePlayer = playersList[i];
             if (thePlayer.charmed == true)
             {
-                if ( thePlayer.visitedPlayer!= "" && thePlayer.action != "")
+                if (thePlayer.visitedPlayer != "" && thePlayer.action != "")
                 {
 
                     Players deniedPlayer = playersList.FirstOrDefault(obj => obj.pname == thePlayer.visitedPlayer);
@@ -76,32 +77,33 @@ public class ActualPlay : MonoBehaviour
 
         for (int i = 0; i < pListCount; i++)
         {
-            Debug.Log(  "worry about ya!!");
+            Debug.Log("worry about ya!!");
+
             Players thePlayer = playersList[i];
             // checking he is dead or not
             if (thePlayer.dead == true && thePlayer.protectd == false && thePlayer.rescued == false)
-        
+
             {
-                
+
                 string thePlayerName = thePlayer.pname;
                 if (playersList.Contains(thePlayer))
                 {
                     killPlayers.Add(thePlayer);
                     Debug.Log("Removed: " + thePlayerName);
-                     Debug.Log(thePlayerName + " is dead!!");
+                    Debug.Log(thePlayerName + " is dead!!");
                     GameObject deadPlayer = panels.FirstOrDefault(obj => obj.name == thePlayer.pname);
                     deadPlayers.Add(thePlayer);
                     deadPanels.Add(panels[2 * i]);
-                    deadPanels.Add(panels[2 * i +1]);
+                    deadPanels.Add(panels[2 * i + 1]);
                 }
-               
-                
+
+
                 for (int m = 0; m < panels.Count; m++)
                 {
                     if (panels[m].name == thePlayerName)
                     {
                         panels.RemoveAt(m);
-                        panels.RemoveAt(m-1);
+                        panels.RemoveAt(m - 1);
                     }
                 }
 
@@ -109,7 +111,7 @@ public class ActualPlay : MonoBehaviour
                 for (int k = 1; k < panels.Count; k = k + 2)
                 {
 
-                        //GameObject otherPlayer = panels.FirstOrDefault(obj => obj.name == playersList[k].pname);
+                    //GameObject otherPlayer = panels.FirstOrDefault(obj => obj.name == playersList[k].pname);
                     GameObject otherPlayer = panels[k];
                     Transform otherPlayerTransform = otherPlayer.transform;
                     GameObject profilesObject = otherPlayerTransform.Find("Names").gameObject;
@@ -121,11 +123,16 @@ public class ActualPlay : MonoBehaviour
                     {
                         Debug.Log("caba caba abaa");
                     }
-                    
+
 
                 }
-                Button passButton = playerPanels[playerPanels.Count -1].transform.Find("passButton").GetComponent<Button>();
-                Button pickButton = playerPanels[playerPanels.Count -1].transform.Find("pickButton").GetComponent<Button>();
+                //deleting the player node from voting page
+                Transform votablePlayerTf = votingPanel.transform;
+                GameObject votableObjects = votablePlayerTf.Find("Names").gameObject;
+                FindObjectWithSpecificTextInChildren(votableObjects.transform, thePlayerName);
+
+                Button passButton = playerPanels[playerPanels.Count - 1].transform.Find("passButton").GetComponent<Button>();
+                Button pickButton = playerPanels[playerPanels.Count - 1].transform.Find("pickButton").GetComponent<Button>();
                 ActualPlay Aplay = GetComponent<ActualPlay>();
                 if (Aplay != null)
                 {
@@ -137,10 +144,10 @@ public class ActualPlay : MonoBehaviour
                     Debug.Log("WOKEGEEE!");
                 }
             }
-            
+
             else
             {
-                
+
                 if (thePlayer.dead == true && thePlayer.protectd == true)
                 {
                     int count = 0;
@@ -151,16 +158,16 @@ public class ActualPlay : MonoBehaviour
                         {
                             deadPlayers.Add(visitingPlayer);
                             killPlayers.Add(visitingPlayer);
-                            deadPanels.Add(panels[2 * (k-count)]);
-                            deadPanels.Add(panels[2 * (k-count) +1]);
-                            panels.RemoveAt(2 * (k-count));
-                            panels.RemoveAt(2 * (k-count) +1);
+                            deadPanels.Add(panels[2 * (k - count)]);
+                            deadPanels.Add(panels[2 * (k - count) + 1]);
+                            panels.RemoveAt(2 * (k - count));
+                            panels.RemoveAt(2 * (k - count) + 1);
                             count++;
                             if (count == 2)
                             {
                                 break;
                             }
-                        } 
+                        }
                     }
                     thePlayer.dead = false;
                     thePlayer.protectd = false;
@@ -174,29 +181,29 @@ public class ActualPlay : MonoBehaviour
                     Debug.Log(thePlayer.pname + " is rescued!");
                 }
 
-                
-                else if(thePlayer.revealed == true)
+
+                else if (thePlayer.revealed == true)
                 {
                     if (thePlayer.role == "AI TOYON")
-                        {
-                            Debug.Log(thePlayer.pname + " revealed himself!! His role is " + thePlayer.role);
-                        }
-                        else 
-                        {
-                           Debug.Log(thePlayer.pname + " is revealed!! His role is " + thePlayer.role);
+                    {
+                        Debug.Log(thePlayer.pname + " revealed himself!! His role is " + thePlayer.role);
+                    }
+                    else
+                    {
+                        Debug.Log(thePlayer.pname + " is revealed!! His role is " + thePlayer.role);
 
-                        }
-                    
+                    }
+
                 }
             }
 
-            
-        }    
+
+        }
 
         for (int p = 0; p < killPlayers.Count; p++)
         {
             playersList.Remove(killPlayers[p]);
-        }   
+        }
         killPlayers.Clear();
     }
 
@@ -207,7 +214,7 @@ public class ActualPlay : MonoBehaviour
 
         List<GameObject> panels = cPanels.panels;
         List<GameObject> playerPanels = cPanels.playerPanels;
-
+        GameObject votingPanel = cPanels.votingPanelTo;
         List<Players> playersList = cPanels.ps;
         int pListCount = playersList.Count;
 
@@ -216,56 +223,63 @@ public class ActualPlay : MonoBehaviour
         killPlayers.Add(thePlayer);
         Debug.Log("Removed: " + playerWillKilled);
         Debug.Log(playerWillKilled + " is dead!!");
-                    
+
         deadPlayers.Add(thePlayer);
-        
+
         for (int m = 0; m < panels.Count; m++)
-                {
-                    if (panels[m].name == playerWillKilled)
-                    {
-                        deadPanels.Add(panels[2 * m]);
-                        deadPanels.Add(panels[2 * m +1]);
-                        panels.RemoveAt(m);
-                        panels.RemoveAt(m-1);
-                        break;
-                    }
-                }
+        {
+            if (panels[m].name == playerWillKilled)
+            {
+                deadPanels.Add(panels[2 * m]);
+                deadPanels.Add(panels[2 * m + 1]);
+                panels.RemoveAt(m);
+                panels.RemoveAt(m - 1);
+                break;
+            }
+        }
         for (int k = 1; k < panels.Count; k = k + 2)
-                {
+        {
 
-                        //GameObject otherPlayer = panels.FirstOrDefault(obj => obj.name == playersList[k].pname);
-                    GameObject otherPlayer = panels[k];
-                    Transform otherPlayerTransform = otherPlayer.transform;
-                    GameObject profilesObject = otherPlayerTransform.Find("Names").gameObject;
-                    if (profilesObject != null)
-                    {
-                        FindObjectWithSpecificTextInChildren(profilesObject.transform, playerWillKilled);
-                    }
-                    else
-                    {
-                        Debug.Log("caba caba abaa");
-                    }
-                    
+            //GameObject otherPlayer = panels.FirstOrDefault(obj => obj.name == playersList[k].pname);
+            GameObject otherPlayer = panels[k];
+            Transform otherPlayerTransform = otherPlayer.transform;
+            GameObject profilesObject = otherPlayerTransform.Find("Names").gameObject;
+            if (profilesObject != null)
+            {
+                FindObjectWithSpecificTextInChildren(profilesObject.transform, playerWillKilled);
+            }
+            else
+            {
+                Debug.Log("caba caba abaa");
+            }
 
-                }
-                Button passButton = playerPanels[playerPanels.Count -1].transform.Find("passButton").GetComponent<Button>();
-                Button pickButton = playerPanels[playerPanels.Count -1].transform.Find("pickButton").GetComponent<Button>();
-                ActualPlay Aplay = GetComponent<ActualPlay>();
-                if (Aplay != null)
-                {
-                    pickButton.onClick.AddListener(Aplay.afterPlayerAction);
-                    passButton.onClick.AddListener(Aplay.afterPlayerAction);
-                }
-                else
-                {
-                    Debug.Log("WOKEGEEE!");
-                }
+
+        }
         
+        
+        
+        Transform votablePlayerTf = votingPanel.transform;
+        GameObject votableObjects = votablePlayerTf.Find("Names").gameObject;
+        FindObjectWithSpecificTextInChildren(votableObjects.transform, playerWillKilled);
+        
+        Button passButton = playerPanels[playerPanels.Count - 1].transform.Find("passButton").GetComponent<Button>();
+        Button pickButton = playerPanels[playerPanels.Count - 1].transform.Find("pickButton").GetComponent<Button>();
+        ActualPlay Aplay = GetComponent<ActualPlay>();
+        if (Aplay != null)
+        {
+            pickButton.onClick.AddListener(Aplay.afterPlayerAction);
+            passButton.onClick.AddListener(Aplay.afterPlayerAction);
+        }
+        else
+        {
+            Debug.Log("WOKEGEEE!");
+        }
+
 
         for (int p = 0; p < killPlayers.Count; p++)
         {
             playersList.Remove(killPlayers[p]);
-        }   
+        }
         killPlayers.Clear();
     }
     void FindObjectWithSpecificTextInChildren(Transform parentTransform, string nameToDelete)
@@ -276,7 +290,6 @@ public class ActualPlay : MonoBehaviour
 
         for (int i = 0; i < parentTransform.childCount; i++)
         {
-            Debug.Log("Countof the buttons: " + i);
             Transform child = parentTransform.GetChild(i);
             Button buttonComponent = child.GetComponent<Button>();
             TextMeshProUGUI textComponent = child.GetComponentInChildren<TextMeshProUGUI>();
@@ -284,7 +297,6 @@ public class ActualPlay : MonoBehaviour
             if (buttonComponent != null && textComponent != null && textComponent.text == nameToDelete)
             {
                 buttonToDelete = buttonComponent;
-                Debug.Log("Name of the Button: " + buttonToDelete);
                 Destroy(buttonToDelete.gameObject);
 
                 buttonIndexToDelete = i;

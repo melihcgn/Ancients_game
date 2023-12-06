@@ -20,6 +20,7 @@ public class createPanels : MonoBehaviour
     private TextMeshProUGUI pNameText1, pNameText2, tNameText1, pRoleText1, pRoleText2, explanationText;
     public List<GameObject> panels = new List<GameObject>();
     public List<GameObject> playerPanels = new List<GameObject>();
+    public GameObject votingPanelTo;
     public GameObject infoPanel ;
     public   GameObject morningPanel; 
     public GameObject circleButtonPrefab;
@@ -30,7 +31,7 @@ public class createPanels : MonoBehaviour
 
     private List<Button> buttons = new List<Button>();
     public List<Players> ps = new List<Players>();
-
+    
     public Button selectedButton;
     public Button votingButton;
     private ActualPlay Aplay;
@@ -92,14 +93,47 @@ public class createPanels : MonoBehaviour
                 // Calculate the spacing between buttons to fit them in a row
                 float spacing = buttonWidth * maxButtonsPerRow / 3 * 2;
                 int pCount = playersList.Count;
-
-                int dummy = 0;
-
-                for (int i = 0; i < pCount; i++)
+                
+                
+                int dummy = 0 , deadCount = 0;
+                if (player.role == "UMAY")
                 {
-                    if (player.role == "UMAY")
+                    List<Players> deadForUmays = new List<Players>();
+                    if ( Aplay != null && Aplay.deadPlayers == null)
                     {
-                        if (playersList[i].dead == true)
+                        deadForUmays = Aplay.deadPlayers;
+                    }
+                    else{
+                        deadCount = deadForUmays.Count;
+                    }                    
+                    
+                    for (int k = 0; k < deadCount; k++)
+                    {
+                        // Calculate row and column indices for the button
+                        int row = (k + dummy) / maxButtonsPerRow;
+                        int col = (k + dummy) % maxButtonsPerRow;
+
+                        // Calculate the position with appropriate spacing
+                        Vector3 buttonPosition = new Vector3(
+                            names.position.x + (col) * buttonWidth * 2 - spacing,
+                            names.position.y - (row - 1) * buttonWidth * 2,
+                            names.position.z);
+
+                        // Instantiate the button at the calculated position
+                        GameObject circleButtonInstance = Instantiate(circleButtonPrefab, buttonPosition, Quaternion.identity, names);
+                        TextMeshProUGUI tmpText = circleButtonInstance.GetComponentInChildren<TextMeshProUGUI>();
+                        tmpText.text = deadForUmays[k].pname;
+                        Button circleButton = circleButtonInstance.GetComponent<Button>();
+                        circleButton.name = deadForUmays[k].pname + " button";
+                        circleButton.onClick.AddListener(() => OnButtonClick(ref circleButton, deadForUmays));
+                        //making clickable
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < pCount; i++)
+                    {
+                        if (player.pname != playersList[i].pname)
                         {
                             // Calculate row and column indices for the button
                             int row = (i + dummy) / maxButtonsPerRow;
@@ -116,37 +150,17 @@ public class createPanels : MonoBehaviour
                             TextMeshProUGUI tmpText = circleButtonInstance.GetComponentInChildren<TextMeshProUGUI>();
                             tmpText.text = playersList[i].pname;
                             Button circleButton = circleButtonInstance.GetComponent<Button>();
-                            circleButton.name = playersList[i].pname + " button";
                             circleButton.onClick.AddListener(() => OnButtonClick(ref circleButton, playersList));
                             //making clickable
                         }
-                    }
-                    else if (player.pname != playersList[i].pname)
-                    {
-                        // Calculate row and column indices for the button
-                        int row = (i + dummy) / maxButtonsPerRow;
-                        int col = (i + dummy) % maxButtonsPerRow;
+                        else
+                        {
+                            dummy--;
+                        }
 
-                        // Calculate the position with appropriate spacing
-                        Vector3 buttonPosition = new Vector3(
-                            names.position.x + (col) * buttonWidth * 2 - spacing,
-                            names.position.y - (row - 1) * buttonWidth * 2,
-                            names.position.z);
-
-                        // Instantiate the button at the calculated position
-                        GameObject circleButtonInstance = Instantiate(circleButtonPrefab, buttonPosition, Quaternion.identity, names);
-                        TextMeshProUGUI tmpText = circleButtonInstance.GetComponentInChildren<TextMeshProUGUI>();
-                        tmpText.text = playersList[i].pname;
-                        Button circleButton = circleButtonInstance.GetComponent<Button>();
-                        circleButton.onClick.AddListener(() => OnButtonClick(ref circleButton, playersList));
-                        //making clickable
                     }
-                    else
-                    {
-                        dummy--;
-                    }
-
                 }
+
 
 
 
@@ -371,6 +385,7 @@ public class createPanels : MonoBehaviour
         string voteName = "voting";
         string decideName = "deciding";
         GameObject votePlane = createOnePanel(voteName, playersList, panels);   
+        votingPanelTo = votePlane;
         panels.Add(votePlane);
         votePlane.SetActive(false);            
             //panels.Add(decidePlane);
@@ -530,7 +545,7 @@ public class createPanels : MonoBehaviour
             }
             else if (choosingCell.role == "AI TOYON")
             {
-                choosingCell.revealed = true;
+                choosingCell.revealed = true;   
                 choosingCell.action = "reveal";
             }
             else if (choosingCell.role == "AYZIT")
@@ -617,6 +632,7 @@ public class createPanels : MonoBehaviour
             }
             Debug.Log("resmin mi var şuan elimde: " + playerCell.pname + " - " + playerCell.dead);
         }
+
         else
         {
             Debug.Log("SIKINTI VAAR");
@@ -743,6 +759,7 @@ public class createPanels : MonoBehaviour
                         panels.RemoveAt(m-1);
                     }
                 }
+            
             
         }
         

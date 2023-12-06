@@ -2160,6 +2160,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a5f9afaaf0bbf94194cc8c4a0f9259b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1131879324 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 572048850488441607, guid: 9e92205b72d91ca4e9fcba0f90aa3e38, type: 3}
+  m_PrefabInstance: {fileID: 809665485}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131879315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89304799a97334f4f97cd2a804b1faec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1151367585
 GameObject:
   m_ObjectHideFlags: 0
@@ -2512,6 +2523,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1131879318}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: AccessTextListFromAnotherScript
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1131879324}
+        m_TargetAssemblyTypeName: createPanels, Assembly-CSharp
+        m_MethodName: Start
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

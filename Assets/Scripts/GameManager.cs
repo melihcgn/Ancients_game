@@ -153,7 +153,13 @@ public class GameManager : MonoBehaviour
                     int numberGood = goodRoles.Count;
                     availableRoles = new List<string>();
                     PrintList(goodRoles);
-                    for (int i = 0; i < roundedGood; i++)
+
+                    tempRole = goodRoles[3];
+                    RemoveElementAtIndex(3, goodRoles);
+                    availableRoles.Add(tempRole);
+
+
+                    for (int i = 0; i < roundedGood-1; i++)
                     {
                         int randomNumber = random.Next(0, numberGood);  // Generates a number from 0 to 8 (inclusive)
                         Debug.Log(randomNumber);
@@ -165,7 +171,9 @@ public class GameManager : MonoBehaviour
                     int roundedBad = Mathf.FloorToInt((textListLength/4.0f));
                     int numberBad = badRoles.Count;
                     Debug.Log("roundedBad " + roundedBad);
-                    for (int i = 0; i < roundedBad; i++)
+                    tempRole = badRoles[0];
+                    availableRoles.Add(tempRole);
+                    for (int i = 0; i < roundedBad-1; i++)
                     {
                         int randomNumber = random.Next(0, numberBad);  // Generates a number from 0 to 8 (inclusive)
                         tempRole = badRoles[randomNumber];
