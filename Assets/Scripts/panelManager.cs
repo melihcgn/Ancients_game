@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using playerNS;
+using UnityEngine.SceneManagement;
 public class panelManager : MonoBehaviour
 {
+    public GameObject startGamePanel;
     private createPanels createpanels;
     public List<GameObject> panels;
     private int count;
@@ -19,7 +21,7 @@ public class panelManager : MonoBehaviour
 
         }
         else{
-            Debug.Log("gorko");
+          
         }
 
     }
@@ -64,11 +66,16 @@ public class panelManager : MonoBehaviour
         prevPanelCount = panels.Count;
     }
 
+    public void toHomePage()
+    {
+        SceneManager.LoadScene("Intro");
+    }
+
 
     public void OpenPanel(string panelName)
     {
         GameObject panel = GameObject.Find(panelName);
-        Debug.Log("panelname: " + panelName  + "deneme");
+        //Debug.Log("panelname: " + panelName  + "deneme");
         if (panel != null)
         {
             panel.SetActive(true);
@@ -90,5 +97,10 @@ public class panelManager : MonoBehaviour
         {
             Debug.LogWarning("Panel not found with name: " + panelName);
         }
+    }
+
+    public void toStartGame()
+    {
+        startGamePanel.SetActive(true);;
     }
 }

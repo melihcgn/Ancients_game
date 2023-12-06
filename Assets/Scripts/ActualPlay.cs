@@ -12,6 +12,7 @@ public class ActualPlay : MonoBehaviour
     public List<Players> deadPlayers = new List<Players>();
     List<Players> killPlayers = new List<Players>();
     List<GameObject> deadPanels = new List<GameObject>();
+    Players lastPlayer;
     public void afterPlayerAction()
     {
 
@@ -22,7 +23,7 @@ public class ActualPlay : MonoBehaviour
         List<GameObject> playerPanels = cPanels.playerPanels;
         GameObject votingPanel = cPanels.votingPanelTo;
         List<Players> playersList = cPanels.ps;
-
+        lastPlayer = playersList[playersList.Count- 1];
 
 
         int pListCount = playersList.Count;
@@ -77,7 +78,7 @@ public class ActualPlay : MonoBehaviour
 
         for (int i = 0; i < pListCount; i++)
         {
-            Debug.Log("worry about ya!!");
+            //Debug.Log("worry about ya!!");
 
             Players thePlayer = playersList[i];
             // checking he is dead or not
@@ -134,8 +135,9 @@ public class ActualPlay : MonoBehaviour
                 Button passButton = playerPanels[playerPanels.Count - 1].transform.Find("passButton").GetComponent<Button>();
                 Button pickButton = playerPanels[playerPanels.Count - 1].transform.Find("pickButton").GetComponent<Button>();
                 ActualPlay Aplay = GetComponent<ActualPlay>();
-                if (Aplay != null)
+                if (Aplay != null || lastPlayer != playersList[playersList.Count -1])
                 {
+                    lastPlayer = playersList[playersList.Count -1];
                     pickButton.onClick.AddListener(Aplay.afterPlayerAction);
                     passButton.onClick.AddListener(Aplay.afterPlayerAction);
                 }
@@ -199,12 +201,60 @@ public class ActualPlay : MonoBehaviour
 
 
         }
-
+        Debug.Log("DENİTORUZZ HOCAM");
         for (int p = 0; p < killPlayers.Count; p++)
         {
             playersList.Remove(killPlayers[p]);
         }
         killPlayers.Clear();
+        bool endGame = true;
+        for (int j = 0; j < playersList.Count; j++)
+            {
+                
+                if (playersList[j].role == "TEPEGOZ" || playersList[j].role == "SU IYESI"|| playersList[j].role == "GULYABANI")
+                {
+                    endGame = false;
+                }
+        }
+        string endMessage;
+        if (endGame)
+        {
+            endMessage= "Town wins";
+            cPanels.createEndPanel(endMessage);
+        }
+        else
+        {
+            if (playersList.Count == 2)
+            {
+                for (int j = 0; j < playersList.Count; j++)
+                {
+                    Debug.Log("playersList[j].role = " + playersList[j].role );    
+                    if (playersList[j].role == "TEPEGOZ" )
+                    {
+                        //Tepegöz wins
+                        endMessage= "Tepegöz wins";
+                        cPanels.createEndPanel(endMessage);
+                        endGame = true;
+                    }
+                    else if (playersList[j].role == "SU IYESI")
+                    {
+                        endMessage= "Su Iyesi wins";
+                        cPanels.createEndPanel(endMessage);
+                        endGame = true;
+                        // Su iyesi wins 
+                    }
+                    else if (playersList[j].role == "GULYABANI")
+                    {
+                        endMessage= "Gulyabani wins";
+                        cPanels.createEndPanel(endMessage);
+
+                        endGame = true;
+                        // Gulyabani wins
+                    }
+                }
+            }
+        }
+
     }
 
 
@@ -216,6 +266,11 @@ public class ActualPlay : MonoBehaviour
         List<GameObject> playerPanels = cPanels.playerPanels;
         GameObject votingPanel = cPanels.votingPanelTo;
         List<Players> playersList = cPanels.ps;
+        lastPlayer = playersList[playersList.Count -1];
+
+
+
+
         int pListCount = playersList.Count;
 
         Players thePlayer = playersList.FirstOrDefault(obj => obj.pname == playerWillKilled);
@@ -230,8 +285,8 @@ public class ActualPlay : MonoBehaviour
         {
             if (panels[m].name == playerWillKilled)
             {
-                deadPanels.Add(panels[2 * m]);
-                deadPanels.Add(panels[2 * m + 1]);
+                deadPanels.Add(panels[ m]);
+                deadPanels.Add(panels[m + 1]);
                 panels.RemoveAt(m);
                 panels.RemoveAt(m - 1);
                 break;
@@ -265,8 +320,9 @@ public class ActualPlay : MonoBehaviour
         Button passButton = playerPanels[playerPanels.Count - 1].transform.Find("passButton").GetComponent<Button>();
         Button pickButton = playerPanels[playerPanels.Count - 1].transform.Find("pickButton").GetComponent<Button>();
         ActualPlay Aplay = GetComponent<ActualPlay>();
-        if (Aplay != null)
+        if (Aplay != null || lastPlayer != playersList[playersList.Count -1])
         {
+            lastPlayer = playersList[playersList.Count -1];
             pickButton.onClick.AddListener(Aplay.afterPlayerAction);
             passButton.onClick.AddListener(Aplay.afterPlayerAction);
         }
@@ -303,6 +359,10 @@ public class ActualPlay : MonoBehaviour
                 break;
             }
         }
+
+
+     
+
         /*
         while (x < 10)
         {

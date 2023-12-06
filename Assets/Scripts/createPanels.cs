@@ -103,6 +103,7 @@ public class createPanels : MonoBehaviour
                     {
                         deadForUmays = Aplay.deadPlayers;
                     }
+
                     else{
                         deadCount = deadForUmays.Count;
                     }                    
@@ -177,7 +178,6 @@ public class createPanels : MonoBehaviour
                 panels.Add(playerPlane);
                 transferPlane.SetActive(false);
                 playerPlane.SetActive(false);
-                Debug.Log("gorko2 " + panels.Count);
 
 
                 if (playerPlane != null)
@@ -200,9 +200,11 @@ public class createPanels : MonoBehaviour
                         {
                             pickButton.onClick.AddListener(Aplay.afterPlayerAction);
                             passButton.onClick.AddListener(Aplay.afterPlayerAction);
+                            
                         }
                         else
                         {
+                            
                             Debug.Log("WOKEGEEE!");
                         }
 
@@ -389,7 +391,7 @@ public class createPanels : MonoBehaviour
         panels.Add(votePlane);
         votePlane.SetActive(false);            
             //panels.Add(decidePlane);
-            Debug.Log("gorko33 " + panels.Count);
+            //Debug.Log("gorko33 " + panels.Count);
 
 
 
@@ -483,7 +485,7 @@ public class createPanels : MonoBehaviour
          closingpanel.SetActive(false);
          openingpanel.SetActive(true);
         
-         Debug.Log("yoyoyo number is: " + panels.Count);
+         //Debug.Log("yoyoyo number is: " + panels.Count);
      }
 
     public void changeStatus(string ExeRole)
@@ -491,13 +493,13 @@ public class createPanels : MonoBehaviour
         if (selectedButton != null)
         {
             TextMeshProUGUI buttonText = selectedButton.GetComponentInChildren<TextMeshProUGUI>();
-            Debug.Log("sdfsdf=  " + ps[0].pname);
-            Debug.Log("sdfsdf=  " + ps[0].pname + " DSFDS " + ExeRole);
+            //Debug.Log("sdfsdf=  " + ps[0].pname);
+            //Debug.Log("sdfsdf=  " + ps[0].pname + " DSFDS " + ExeRole);
             Players playerCell = new Players();
             playerCell = ps.FirstOrDefault(players => players.pname == buttonText.text);
 
             Players choosingCell = ps.FirstOrDefault(players => players.role == ExeRole);
-            Debug.Log("resmin var şuan elimde: " + choosingCell.pname);
+            //Debug.Log("resmin var şuan elimde: " + choosingCell.pname);
             if (choosingCell.role == "MERGEN")
             {
                 choosingCell.visitedPlayer = playerCell.pname; 
@@ -630,7 +632,7 @@ public class createPanels : MonoBehaviour
             {
                 Debug.Log("OLMADIA Q ");
             }
-            Debug.Log("resmin mi var şuan elimde: " + playerCell.pname + " - " + playerCell.dead);
+            //Debug.Log("resmin mi var şuan elimde: " + playerCell.pname + " - " + playerCell.dead);
         }
 
         else
@@ -645,14 +647,14 @@ public class createPanels : MonoBehaviour
     {
         if (selectedButton != null)
         {
-            Debug.Log("ps count=  " + ps.Count + " DSFDS " + ExeRole);
+            //Debug.Log("ps count=  " + ps.Count + " DSFDS " + ExeRole);
             TextMeshProUGUI buttonText = selectedButton.GetComponentInChildren<TextMeshProUGUI>();
-            Debug.Log("sdfsdf=  " + ps[0].pname + " DSFDS " + ExeRole);
+            //Debug.Log("sdfsdf=  " + ps[0].pname + " DSFDS " + ExeRole);
             Players playerCell = new Players();
             playerCell = ps.FirstOrDefault(players => players.pname == buttonText.text);
 
             Players choosingCell = ps.FirstOrDefault(players => players.role == ExeRole);
-            Debug.Log("resmin var şuan elimde: " + choosingCell.pname);
+            //Debug.Log("resmin var şuan elimde: " + choosingCell.pname);
             if (choosingCell.role == "Ulgen")
             {
                 choosingCell.visitedPlayer = playerCell.pname; 
@@ -763,6 +765,55 @@ public class createPanels : MonoBehaviour
             
         }
         
+    public void DeleteGame()
+    {
+        GameObject[] objectsToDelete = GameObject.FindGameObjectsWithTag("gameTempPanel");
 
+        foreach (GameObject obj in objectsToDelete)
+        {
+            Destroy(obj); // Delete the objects with the "ToDelete" tag
+        }
+        // foreach (Players item in ps)
+        // {
+        //     Destroy(item); 
+        // }
+
+    }
+
+    public void createEndPanel(string winnertxt)
+    {
+        
+        GameObject tempPlane = Instantiate(playerPanelPrefab, spawnPosition, Quaternion.identity, canvas);
+        TextMeshProUGUI pNameText1 = tempPlane.transform.Find("nameText").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI pRoleText2 = tempPlane.transform.Find("roleText").GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI explanationText = tempPlane.transform.Find("roleText").Find("roleInfo").GetComponent<TextMeshProUGUI>();
+        Button HomePageButton = tempPlane.transform.Find("passButton").GetComponent<Button>();
+        //Button playPageButton = tempPlane.transform.Find("pickButton").GetComponent<Button>();
+
+        panelManager pManagerFV = GetComponent<panelManager>();
+        TextMeshProUGUI killVoteText = HomePageButton.GetComponentInChildren<TextMeshProUGUI>();
+        
+        killVoteText.text = "Execute";
+        string killableName =  "okey";
+        pNameText1.text = winnertxt;
+        pRoleText2.text = "GAME IS OVER";
+        tempPlane.name = "endGamePage";
+        tempPlane.SetActive(true);
+        HomePageButton.onClick.AddListener(() => tempPlane.SetActive(false));
+        HomePageButton.onClick.AddListener(() => DeleteGame());
+        HomePageButton.onClick.AddListener(pManagerFV.toHomePage);
+        // TextMeshProUGUI cancelVoteText = playPageButton.GetComponentInChildren<TextMeshProUGUI>();
+        // playPageButton.onClick.AddListener(() => tempPlane.SetActive(false));
+        // cancelVoteText.text = "Forgive";
+
+        // playPageButton.onClick.AddListener(() => DeleteGame());
+        // playPageButton.onClick.AddListener(pManagerFV.toStartGame);
+        
+    
+        
+        
+        
+
+    }
 
 }
