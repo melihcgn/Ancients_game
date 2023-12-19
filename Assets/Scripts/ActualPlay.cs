@@ -7,23 +7,24 @@ using TMPro;
 using UnityEngine.UI;
 public class ActualPlay : MonoBehaviour
 {
-    
+
     private createPanels cPanels;
     public List<Players> deadPlayers = new List<Players>();
     List<Players> killPlayers = new List<Players>();
     List<GameObject> deadPanels = new List<GameObject>();
-    Players lastPlayer;
+    GameObject lastPlayer;
     public void afterPlayerAction()
     {
 
-
+        //Debug.Log("bakalım 2 defamı");
         cPanels = GetComponent<createPanels>();
 
         List<GameObject> panels = cPanels.panels;
         List<GameObject> playerPanels = cPanels.playerPanels;
         GameObject votingPanel = cPanels.votingPanelTo;
         List<Players> playersList = cPanels.ps;
-        lastPlayer = playersList[playersList.Count- 1];
+        lastPlayer = playerPanels[playerPanels.Count - 1];
+        List<GameObject> umayButtons = cPanels.umayButtons;
 
 
         int pListCount = playersList.Count;
@@ -44,6 +45,11 @@ public class ActualPlay : MonoBehaviour
                     else if (thePlayer.action == "protect")
                     {
                         deniedPlayer.protectd = false;
+                    }
+                    else if (thePlayer.action == "retrieve")
+                    {
+                        deniedPlayer.dead = true;
+
                     }
                     else if (thePlayer.action == "rescue")
                     {
@@ -76,16 +82,42 @@ public class ActualPlay : MonoBehaviour
 
         }
 
+        //retrieving the player 
+        int dListCount = deadPlayers.Count;
+
+        for (int p = 0; p < dListCount; p++)
+        {
+            if (deadPlayers[p].dead == false)
+            {
+                Debug.Log("deadPlayers: " + deadPlayers[p].pname);
+                string playerName = deadPlayers[p].pname;
+                string rname = deadPlayers[p].role;
+                RetrieveThePlayer(playerName, rname);
+            }
+        }
+        pListCount = playersList.Count;
         for (int i = 0; i < pListCount; i++)
         {
-            //Debug.Log("worry about ya!!");
 
             Players thePlayer = playersList[i];
+
+
+            //checking for Alaz Han
+            if(thePlayer.alazPower == true)
+            {
+                foreach(string playerName in thePlayer.visitors )
+                {
+                    Players willKilled = playersList.FirstOrDefault(player => player.pname == playerName);
+                    willKilled.changeDead(true); 
+                }
+            }
+
+
             // checking he is dead or not
             if (thePlayer.dead == true && thePlayer.protectd == false && thePlayer.rescued == false)
 
             {
-
+                
                 string thePlayerName = thePlayer.pname;
                 if (playersList.Contains(thePlayer))
                 {
@@ -103,22 +135,30 @@ public class ActualPlay : MonoBehaviour
                 {
                     if (panels[m].name == thePlayerName)
                     {
-                        panels.RemoveAt(m);
                         panels.RemoveAt(m - 1);
+                        panels.RemoveAt(m - 1);
+                        playerPanels.RemoveAt(m - 1);
+                        playerPanels.RemoveAt(m - 1);
                     }
                 }
 
 
-                for (int k = 1; k < panels.Count; k = k + 2)
+                for (int k = 1; k < playerPanels.Count; k = k + 2)
                 {
 
                     //GameObject otherPlayer = panels.FirstOrDefault(obj => obj.name == playersList[k].pname);
-                    GameObject otherPlayer = panels[k];
+                    GameObject otherPlayer = playerPanels[k];
+                    string parentPlayerName = otherPlayer.name;
+                    Debug.Log("otherPlayer: " + otherPlayer.name);
+                    Players parentPlayer = playersList.FirstOrDefault(obj => obj.pname == parentPlayerName);
+                    Debug.Log("parentPlayer111: " + parentPlayer.role);
+                    string parentPlayerRole = parentPlayer.role;
+                    Debug.Log("parentPlayer: " + parentPlayerRole);
                     Transform otherPlayerTransform = otherPlayer.transform;
                     GameObject profilesObject = otherPlayerTransform.Find("Names").gameObject;
                     if (profilesObject != null)
                     {
-                        FindObjectWithSpecificTextInChildren(profilesObject.transform, thePlayerName);
+                        FindObjectWithSpecificTextInChildren(profilesObject.transform, thePlayerName, parentPlayerRole);
                     }
                     else
                     {
@@ -130,14 +170,16 @@ public class ActualPlay : MonoBehaviour
                 //deleting the player node from voting page
                 Transform votablePlayerTf = votingPanel.transform;
                 GameObject votableObjects = votablePlayerTf.Find("Names").gameObject;
-                FindObjectWithSpecificTextInChildren(votableObjects.transform, thePlayerName);
-
-                Button passButton = playerPanels[playerPanels.Count - 1].transform.Find("passButton").GetComponent<Button>();
-                Button pickButton = playerPanels[playerPanels.Count - 1].transform.Find("pickButton").GetComponent<Button>();
+                FindObjectWithSpecificTextInChildren(votableObjects.transform, thePlayerName, thePlayerName);
+                GameObject thePlayerPanel = playerPanels[playerPanels.Count - 1];
+                Button passButton = thePlayerPanel.transform.Find("passButton").GetComponent<Button>();
+                Button pickButton = thePlayerPanel.transform.Find("pickButton").GetComponent<Button>();
                 ActualPlay Aplay = GetComponent<ActualPlay>();
-                if (Aplay != null || lastPlayer != playersList[playersList.Count -1])
-                {
-                    lastPlayer = playersList[playersList.Count -1];
+                Debug.Log("lastPlayer: " +lastPlayer.name + "thePlayerPanel: " +thePlayerPanel.name);
+                if (Aplay != null && lastPlayer.name != thePlayerPanel.name)
+                {   
+                    Debug.Log("DURUUDUDURUR");
+                    lastPlayer = playerPanels[playerPanels.Count - 1];
                     pickButton.onClick.AddListener(Aplay.afterPlayerAction);
                     passButton.onClick.AddListener(Aplay.afterPlayerAction);
                 }
@@ -160,10 +202,10 @@ public class ActualPlay : MonoBehaviour
                         {
                             deadPlayers.Add(visitingPlayer);
                             killPlayers.Add(visitingPlayer);
-                            deadPanels.Add(panels[2 * (k - count)]);
-                            deadPanels.Add(panels[2 * (k - count) + 1]);
+                            deadPanels.Add(playerPanels[2 * (k - count)]);
+                            deadPanels.Add(playerPanels[2 * (k - count) + 1]);
                             panels.RemoveAt(2 * (k - count));
-                            panels.RemoveAt(2 * (k - count) + 1);
+                            panels.RemoveAt(2 * (k - count));
                             count++;
                             if (count == 2)
                             {
@@ -201,7 +243,7 @@ public class ActualPlay : MonoBehaviour
 
 
         }
-        Debug.Log("DENİTORUZZ HOCAM");
+        //Debug.Log("DENİTORUZZ HOCAM");
         for (int p = 0; p < killPlayers.Count; p++)
         {
             playersList.Remove(killPlayers[p]);
@@ -209,17 +251,17 @@ public class ActualPlay : MonoBehaviour
         killPlayers.Clear();
         bool endGame = true;
         for (int j = 0; j < playersList.Count; j++)
+        {
+
+            if (playersList[j].role == "TEPEGOZ" || playersList[j].role == "SU IYESI" || playersList[j].role == "GULYABANI")
             {
-                
-                if (playersList[j].role == "TEPEGOZ" || playersList[j].role == "SU IYESI"|| playersList[j].role == "GULYABANI")
-                {
-                    endGame = false;
-                }
+                endGame = false;
+            }
         }
         string endMessage;
-        if (endGame)
+        if (endGame) // ending game phase
         {
-            endMessage= "Town wins";
+            endMessage = "Town wins";
             cPanels.createEndPanel(endMessage);
         }
         else
@@ -228,24 +270,24 @@ public class ActualPlay : MonoBehaviour
             {
                 for (int j = 0; j < playersList.Count; j++)
                 {
-                    Debug.Log("playersList[j].role = " + playersList[j].role );    
-                    if (playersList[j].role == "TEPEGOZ" )
+                    Debug.Log("playersList[j].role = " + playersList[j].role);
+                    if (playersList[j].role == "TEPEGOZ")
                     {
                         //Tepegöz wins
-                        endMessage= "Tepegöz wins";
+                        endMessage = "Tepegöz wins";
                         cPanels.createEndPanel(endMessage);
                         endGame = true;
                     }
                     else if (playersList[j].role == "SU IYESI")
                     {
-                        endMessage= "Su Iyesi wins";
+                        endMessage = "Su Iyesi wins";
                         cPanels.createEndPanel(endMessage);
                         endGame = true;
                         // Su iyesi wins 
                     }
                     else if (playersList[j].role == "GULYABANI")
                     {
-                        endMessage= "Gulyabani wins";
+                        endMessage = "Gulyabani wins";
                         cPanels.createEndPanel(endMessage);
 
                         endGame = true;
@@ -254,7 +296,14 @@ public class ActualPlay : MonoBehaviour
                 }
             }
         }
+        
 
+        // deleting the visitor for the newcomers
+        for (int j = 0; j < playersList.Count; j++)
+        {
+            playersList[j].visitors.Clear();
+        }
+        
     }
 
 
@@ -266,7 +315,7 @@ public class ActualPlay : MonoBehaviour
         List<GameObject> playerPanels = cPanels.playerPanels;
         GameObject votingPanel = cPanels.votingPanelTo;
         List<Players> playersList = cPanels.ps;
-        lastPlayer = playersList[playersList.Count -1];
+        lastPlayer = playerPanels[playerPanels.Count - 1];
 
 
 
@@ -285,10 +334,10 @@ public class ActualPlay : MonoBehaviour
         {
             if (panels[m].name == playerWillKilled)
             {
-                deadPanels.Add(panels[ m]);
-                deadPanels.Add(panels[m + 1]);
+                deadPanels.Add(panels[m]);
+                deadPanels.Add(panels[m - 1]);
                 panels.RemoveAt(m);
-                panels.RemoveAt(m - 1);
+                panels.RemoveAt(m);
                 break;
             }
         }
@@ -297,11 +346,16 @@ public class ActualPlay : MonoBehaviour
 
             //GameObject otherPlayer = panels.FirstOrDefault(obj => obj.name == playersList[k].pname);
             GameObject otherPlayer = panels[k];
+            // finding role of the parent player for UMAY
+            string parentPlayerName = otherPlayer.name;
+            Players parentPlayer = playersList.FirstOrDefault(obj => obj.pname == parentPlayerName);
+            string parentPlayerRole = parentPlayer.role;
             Transform otherPlayerTransform = otherPlayer.transform;
+
             GameObject profilesObject = otherPlayerTransform.Find("Names").gameObject;
             if (profilesObject != null)
             {
-                FindObjectWithSpecificTextInChildren(profilesObject.transform, playerWillKilled);
+                FindObjectWithSpecificTextInChildren(profilesObject.transform, playerWillKilled, parentPlayerRole);
             }
             else
             {
@@ -310,19 +364,19 @@ public class ActualPlay : MonoBehaviour
 
 
         }
-        
-        
-        
+
+
+
         Transform votablePlayerTf = votingPanel.transform;
         GameObject votableObjects = votablePlayerTf.Find("Names").gameObject;
-        FindObjectWithSpecificTextInChildren(votableObjects.transform, playerWillKilled);
-        
+        FindObjectWithSpecificTextInChildren(votableObjects.transform, playerWillKilled, playerWillKilled);
+
         Button passButton = playerPanels[playerPanels.Count - 1].transform.Find("passButton").GetComponent<Button>();
         Button pickButton = playerPanels[playerPanels.Count - 1].transform.Find("pickButton").GetComponent<Button>();
         ActualPlay Aplay = GetComponent<ActualPlay>();
-        if (Aplay != null || lastPlayer != playersList[playersList.Count -1])
+        if (Aplay != null && lastPlayer != playerPanels[playerPanels.Count - 1])
         {
-            lastPlayer = playersList[playersList.Count -1];
+            lastPlayer = playerPanels[playerPanels.Count - 1];
             pickButton.onClick.AddListener(Aplay.afterPlayerAction);
             passButton.onClick.AddListener(Aplay.afterPlayerAction);
         }
@@ -338,7 +392,7 @@ public class ActualPlay : MonoBehaviour
         }
         killPlayers.Clear();
     }
-    void FindObjectWithSpecificTextInChildren(Transform parentTransform, string nameToDelete)
+    void FindObjectWithSpecificTextInChildren(Transform parentTransform, string nameToDelete, string roleName)
     {
 
         Button buttonToDelete = null;
@@ -353,15 +407,128 @@ public class ActualPlay : MonoBehaviour
             if (buttonComponent != null && textComponent != null && textComponent.text == nameToDelete)
             {
                 buttonToDelete = buttonComponent;
-                Destroy(buttonToDelete.gameObject);
+                if (roleName == "UMAY")
+                {
+                    buttonToDelete.gameObject.SetActive(true);
+                }
+                else
+                {
+                    buttonToDelete.gameObject.SetActive(false);
+                }
+
 
                 buttonIndexToDelete = i;
                 break;
             }
         }
 
+    }
 
-     
+    void RetrieveThePlayer(string nameToRetrieve, string roleName)
+    {
+        Transform parentTransform;
+        int dPanelCount = deadPanels.Count;
+        int dListCount = deadPlayers.Count;
+        List<GameObject> panels = cPanels.panels;
+        List<GameObject> playerPanels = cPanels.playerPanels;
+        List<Players> playersList = cPanels.ps;
+        GameObject RetrievedPlayerPanel;
+        GameObject votingPanel = cPanels.votingPanelTo;
+        Players playerRetrieved;
+        
+        
+        Players umayPlayer = playersList.FirstOrDefault(obj => obj.role == "UMAY");
+
+        Button buttonToRetrieve = null;
+        int buttonIndexToRetrieve = -1;
+        for (int t = 1; t < playerPanels.Count; t = t + 2)
+        {
+            GameObject otherPlayer = playerPanels[t];
+
+            Transform otherPlayerTransform = otherPlayer.transform;
+            parentTransform = otherPlayerTransform.Find("Names").gameObject.transform;
+            for (int i = 0; i < parentTransform.childCount; i++)
+            {
+                Transform child = parentTransform.GetChild(i);
+                Button buttonComponent = child.GetComponent<Button>();
+                TextMeshProUGUI textComponent = child.GetComponentInChildren<TextMeshProUGUI>();
+
+                if (buttonComponent != null && textComponent != null && textComponent.text == nameToRetrieve)
+                {
+                    buttonToRetrieve = buttonComponent;
+                    if (umayPlayer.pname == otherPlayer.name)
+                    {
+                        Debug.Log("Umayy geldi: ");
+                        buttonToRetrieve.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        buttonToRetrieve.gameObject.SetActive(true);
+                    }
+
+
+                    buttonIndexToRetrieve = i;
+                    break;
+                }
+            }
+
+        }
+
+        // adding to voting panel
+        GameObject votableAgain = votingPanel;
+
+        Transform votableAgainTransform = votableAgain.transform;
+        parentTransform = votableAgainTransform.Find("Names").gameObject.transform;
+        for (int i = 0; i < parentTransform.childCount; i++)
+        {
+            Transform child = parentTransform.GetChild(i);
+            Button buttonComponent = child.GetComponent<Button>();
+            TextMeshProUGUI textComponent = child.GetComponentInChildren<TextMeshProUGUI>();
+
+            if (buttonComponent != null && textComponent != null && textComponent.text == nameToRetrieve)
+            {
+                buttonToRetrieve = buttonComponent;
+                if (umayPlayer.pname == votableAgain.name)
+                {
+                    Debug.Log("Umayy geldi: ");
+                    buttonToRetrieve.gameObject.SetActive(false);
+                }
+                else
+                {
+                    buttonToRetrieve.gameObject.SetActive(true);
+                }
+
+
+                buttonIndexToRetrieve = i;
+                break;
+            }
+        }
+
+        // finding role of the parent player for UMAY
+
+        for (int j = 0; j < dListCount; j++)
+        {
+            if (deadPlayers[j].dead == false)
+            {
+                int insertionIndex = playerPanels.Count - 3;
+                RetrievedPlayerPanel = deadPanels[2 * j];
+                playerRetrieved = deadPlayers[j];
+
+
+                playerPanels.Add(deadPanels[2 * j]);
+                playerPanels.Add(deadPanels[2 * j +1]);
+                panels.Insert(insertionIndex, deadPanels[2 * j]);
+                panels.Insert(insertionIndex, deadPanels[2 * j +1]);
+                
+                playersList.Add(playerRetrieved);
+                deadPlayers.RemoveAt(j);
+                deadPanels.RemoveAt(2 * j);
+                deadPanels.RemoveAt(2 * j);
+                
+                break;
+            }
+        }
+
 
         /*
         while (x < 10)
@@ -394,4 +561,5 @@ public class ActualPlay : MonoBehaviour
             x++;
         }*/
     }
+
 }

@@ -20,8 +20,11 @@ namespace playerNS{
     public bool revealed;
     public bool markedSu;
     public bool kortigesed;
+    public bool alazPower;
     public string visitedPlayer;
     public string action; 
+    
+    public List<string> visitors;
 
     // Default constructor
     public Players()
@@ -37,8 +40,10 @@ namespace playerNS{
         revealed = false;
         markedSu = false;
         kortigesed = false;
+        alazPower= false;
         visitedPlayer = "";
         action = "";
+        visitors = new List<string>();
     }
 
     // Parameterized constructor
@@ -57,6 +62,7 @@ namespace playerNS{
         kortigesed = kt;
         visitedPlayer = vs;
         action = act;
+        visitors = new List<string>();
     }
 
     public void printPlayer()
@@ -91,16 +97,16 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         goodRoles = new List<string>();
-        goodRoles.Add("Ulgen");
-        goodRoles.Add("MERGEN"); 
-        goodRoles.Add("KIZAGAN");
-        goodRoles.Add("UMAY");
-        goodRoles.Add("BURKUT");
+        goodRoles.Add("Ulgen"); //+
+        goodRoles.Add("MERGEN"); //+
+        goodRoles.Add("KIZAGAN"); //+
+        goodRoles.Add("UMAY"); 
+        goodRoles.Add("BURKUT"); //+
         goodRoles.Add("OD ANA");
-        goodRoles.Add("AKBUGA");
-        goodRoles.Add("AI TOYON");
-        goodRoles.Add("AYZIT");
-        goodRoles.Add("ALAZ HAN");
+        goodRoles.Add("AKBUGA"); //+
+        goodRoles.Add("AI TOYON"); //+
+        goodRoles.Add("AYZIT"); //+
+        goodRoles.Add("ALAZ HAN"); //+
         goodRoles.Add("SIGUN GEYIK");
         goodRoles.Add("YILDIZ HAN");
 
@@ -157,7 +163,7 @@ public class GameManager : MonoBehaviour
                     tempRole = goodRoles[3];
                     RemoveElementAtIndex(3, goodRoles);
                     availableRoles.Add(tempRole);
-
+                    numberGood = goodRoles.Count;
 
                     for (int i = 0; i < roundedGood-1; i++)
                     {
@@ -197,7 +203,7 @@ public class GameManager : MonoBehaviour
                         string role = GetNextRole();
                         Players player = new Players(textList[i], role, false, false, false, false, false, false, false, false, false, "", "");
                         playerSit.Add(player);
-                        player.printPlayer();
+                        //player.printPlayer();
                     }
 
                     createPlanezz.SetupPlayerPanels(playerSit);

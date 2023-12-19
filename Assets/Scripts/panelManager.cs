@@ -12,6 +12,7 @@ public class panelManager : MonoBehaviour
     private int prevPanelCount;
     public void Start()
     {
+        prevPanelCount= 0;
         count = 0;
         GameObject gameManagerObject = GameObject.Find("scriptMoves2");
         if (gameManagerObject != null)
@@ -45,8 +46,12 @@ public class panelManager : MonoBehaviour
 
     public void passingPages()
     {
+        
         List<GameObject> panels = createpanels.panels;
-        if (prevPanelCount != 0 && prevPanelCount != panels.Count)
+        //Debug.Log("count: " + count);
+        //Debug.Log("panelcount: " + panels.Count);
+        //Debug.Log("prevcount: " + prevPanelCount);
+        if (prevPanelCount != 0 && prevPanelCount > panels.Count)
         {
             count = count + panels.Count - prevPanelCount;
         }
@@ -75,7 +80,7 @@ public class panelManager : MonoBehaviour
     public void OpenPanel(string panelName)
     {
         GameObject panel = GameObject.Find(panelName);
-        //Debug.Log("panelname: " + panelName  + "deneme");
+        Debug.Log("panelname: " + panelName + "deneme");
         if (panel != null)
         {
             panel.SetActive(true);
