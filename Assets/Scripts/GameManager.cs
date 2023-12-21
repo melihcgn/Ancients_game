@@ -23,7 +23,8 @@ namespace playerNS{
     public bool alazPower;
     public string visitedPlayer;
     public string action; 
-    
+
+    public string ownInfo;
     public List<string> visitors;
 
     // Default constructor
@@ -44,10 +45,11 @@ namespace playerNS{
         visitedPlayer = "";
         action = "";
         visitors = new List<string>();
+        ownInfo = "";
     }
 
     // Parameterized constructor
-    public Players(string pn, string r, bool ch, bool pr, bool re, bool de, bool sh, bool si, bool rev, bool ms, bool kt, string vs, string act)
+    public Players(string pn, string r, bool ch, bool pr, bool re, bool de, bool sh, bool si, bool rev, bool ms, bool kt, string vs, string act, List<string> vss)
     {
         pname = pn;
         role = r;
@@ -62,7 +64,7 @@ namespace playerNS{
         kortigesed = kt;
         visitedPlayer = vs;
         action = act;
-        visitors = new List<string>();
+        visitors = vss;
     }
 
     public void printPlayer()
@@ -100,7 +102,7 @@ public class GameManager : MonoBehaviour
         goodRoles.Add("Ulgen"); //+
         goodRoles.Add("MERGEN"); //+
         goodRoles.Add("KIZAGAN"); //+
-        goodRoles.Add("UMAY"); 
+        goodRoles.Add("UMAY"); //+
         goodRoles.Add("BURKUT"); //+
         goodRoles.Add("OD ANA");
         goodRoles.Add("AKBUGA"); //+
@@ -108,18 +110,18 @@ public class GameManager : MonoBehaviour
         goodRoles.Add("AYZIT"); //+
         goodRoles.Add("ALAZ HAN"); //+
         goodRoles.Add("SIGUN GEYIK");
-        goodRoles.Add("YILDIZ HAN");
+        goodRoles.Add("YILDIZ HAN"); //+
 
         badRoles = new List<string>();
-        badRoles.Add("TEPEGOZ");
-        badRoles.Add("DEMIRKIYNAK");
+        badRoles.Add("TEPEGOZ"); //+
+        badRoles.Add("DEMIRKIYNAK"); //+
 
 
 
 
 
         neutralRoles = new List<string>();
-        neutralRoles.Add("SU IYESI"); 
+        neutralRoles.Add("SU IYESI"); //+
         neutralRoles.Add("KORMOS");
         neutralRoles.Add("ARCURA");
         neutralRoles.Add("AZMIC");
@@ -160,8 +162,8 @@ public class GameManager : MonoBehaviour
                     availableRoles = new List<string>();
                     PrintList(goodRoles);
 
-                    tempRole = goodRoles[3];
-                    RemoveElementAtIndex(3, goodRoles);
+                    tempRole = goodRoles[4];
+                    RemoveElementAtIndex(4, goodRoles);
                     availableRoles.Add(tempRole);
                     numberGood = goodRoles.Count;
 
@@ -201,7 +203,8 @@ public class GameManager : MonoBehaviour
                     for (int i = 0; i < textListLength; i++)
                     {
                         string role = GetNextRole();
-                        Players player = new Players(textList[i], role, false, false, false, false, false, false, false, false, false, "", "");
+                        List<string> temp = new List<string>();
+                        Players player = new Players(textList[i], role, false, false, false, false, false, false, false, false, false, "", "", temp);
                         playerSit.Add(player);
                         //player.printPlayer();
                     }
