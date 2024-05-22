@@ -21,6 +21,7 @@ namespace playerNS{
     public bool markedSu;
     public bool kortigesed;
     public bool alazPower;
+    public bool alazed;
     public string visitedPlayer;
     public string action; 
 
@@ -46,6 +47,7 @@ namespace playerNS{
         action = "";
         visitors = new List<string>();
         ownInfo = "";
+        alazed= false;
     }
 
     // Parameterized constructor
@@ -99,34 +101,34 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         goodRoles = new List<string>();
-        goodRoles.Add("Ulgen"); //+
+        goodRoles.Add("ULGEN"); //+
         goodRoles.Add("MERGEN"); //+
-        goodRoles.Add("KIZAGAN"); //+
-        goodRoles.Add("UMAY"); //+
-        goodRoles.Add("BURKUT"); //+
-        goodRoles.Add("OD ANA");
-        goodRoles.Add("AKBUGA"); //+
+        goodRoles.Add("KIZAGAN"); //++
+        goodRoles.Add("UMAY"); //++
+        goodRoles.Add("BURKUT"); //++
+        //goodRoles.Add("OD ANA");
+        goodRoles.Add("AKBUGA"); //++
         goodRoles.Add("AI TOYON"); //+
-        goodRoles.Add("AYZIT"); //+
+        goodRoles.Add("AYZIT"); //++
         goodRoles.Add("ALAZ HAN"); //+
-        goodRoles.Add("SIGUN GEYIK");
-        goodRoles.Add("YILDIZ HAN"); //+
+        goodRoles.Add("SIGUN GEYIK");//++
+        goodRoles.Add("YILDIZ HAN"); //++
 
         badRoles = new List<string>();
         badRoles.Add("TEPEGOZ"); //+
-        badRoles.Add("DEMIRKIYNAK"); //+
+        badRoles.Add("DEMIRKIYNAK"); //++
 
 
 
 
 
         neutralRoles = new List<string>();
-        neutralRoles.Add("SU IYESI"); //+
-        neutralRoles.Add("KORMOS");
-        neutralRoles.Add("ARCURA");
-        neutralRoles.Add("AZMIC");
-        neutralRoles.Add("GULYABANI");
-        neutralRoles.Add("KORTIGES");
+        neutralRoles.Add("SU IYESI"); //++
+        //neutralRoles.Add("KORMOS");
+        //neutralRoles.Add("ARCURA");
+        //neutralRoles.Add("AZMIC");
+        neutralRoles.Add("GULYABANI");//++
+        //neutralRoles.Add("KORTIGES");
         
 
 
@@ -162,12 +164,12 @@ public class GameManager : MonoBehaviour
                     availableRoles = new List<string>();
                     PrintList(goodRoles);
 
-                    tempRole = goodRoles[4];
-                    RemoveElementAtIndex(4, goodRoles);
+                    tempRole = goodRoles[3];
                     availableRoles.Add(tempRole);
+                    RemoveElementAtIndex(3, goodRoles);
                     numberGood = goodRoles.Count;
 
-                    for (int i = 0; i < roundedGood-1; i++)
+                    for (int i = 0; i < roundedGood -1; i++)
                     {
                         int randomNumber = random.Next(0, numberGood);  // Generates a number from 0 to 8 (inclusive)
                         Debug.Log(randomNumber);
@@ -180,10 +182,11 @@ public class GameManager : MonoBehaviour
                     int numberBad = badRoles.Count;
                     Debug.Log("roundedBad " + roundedBad);
                     tempRole = badRoles[0];
+                    RemoveElementAtIndex(0, badRoles);
                     availableRoles.Add(tempRole);
                     for (int i = 0; i < roundedBad-1; i++)
                     {
-                        int randomNumber = random.Next(0, numberBad);  // Generates a number from 0 to 8 (inclusive)
+                        int randomNumber = random.Next(0, numberBad-1);  // Generates a number from 0 to 8 (inclusive)
                         tempRole = badRoles[randomNumber];
                         RemoveElementAtIndex(randomNumber, badRoles);
                         availableRoles.Add(tempRole);
@@ -193,8 +196,8 @@ public class GameManager : MonoBehaviour
                     if (textListLength > 5)
                     {
                         int randomNumber = random.Next(0, numberNeutral);  // Generates a number from 0 to 8 (inclusive)
-                        tempRole = neutralRoles[randomNumber];
-                        RemoveElementAtIndex(randomNumber, neutralRoles);
+                        tempRole = neutralRoles[0];
+                        RemoveElementAtIndex(0, neutralRoles);
                         availableRoles.Add(tempRole);
                     }
                     PrintList(availableRoles);

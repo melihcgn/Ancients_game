@@ -1929,6 +1929,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2117507742}
     - target: {fileID: 572048850488441607, guid: 9e92205b72d91ca4e9fcba0f90aa3e38, type: 3}
+      propertyPath: spawnPosition.x
+      value: 585
+      objectReference: {fileID: 0}
+    - target: {fileID: 572048850488441607, guid: 9e92205b72d91ca4e9fcba0f90aa3e38, type: 3}
+      propertyPath: spawnPosition.y
+      value: 1266
+      objectReference: {fileID: 0}
+    - target: {fileID: 572048850488441607, guid: 9e92205b72d91ca4e9fcba0f90aa3e38, type: 3}
       propertyPath: circleButtonPrefab
       value: 
       objectReference: {fileID: 6381376222137903749, guid: 1646f1adc8b5eca47afd58f2e68143bd, type: 3}
@@ -2586,6 +2594,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deadPlayers: []
+  tourCount: 0
+  alazCount: 0
+  isTepegozDead: 0
 --- !u!114 &1131879324 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 572048850488441607, guid: 9e92205b72d91ca4e9fcba0f90aa3e38, type: 3}
@@ -3485,7 +3496,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1552547683}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 2eefbd6da0f68d8449db7540dbf457d5, type: 3}

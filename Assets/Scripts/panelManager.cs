@@ -55,6 +55,13 @@ public class panelManager : MonoBehaviour
         {
             count = count + panels.Count - prevPanelCount;
         }
+        else if(prevPanelCount != 0 && prevPanelCount < panels.Count){
+            count = count + panels.Count - prevPanelCount;
+        }
+        else
+        {
+            
+        }
         if(count < panels.Count)
         {
             panels[count-1].SetActive(false);

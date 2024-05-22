@@ -29,12 +29,14 @@ public class createPanels : MonoBehaviour
     public Color selectedColor = Color.yellow;  // Set selectedColor to yellow
     public Color defaultColor = Color.gray;
 
+    
     private List<Button> buttons = new List<Button>();
     public List<Players> ps = new List<Players>();
     public List<GameObject> umayButtons = new List<GameObject>();
     public Button selectedButton;
     public Button votingButton;
     private ActualPlay Aplay;
+    private string tepegozPlayer, demirkiynakPlayer = "";
     public void Start()
     {
         GameObject gameManagerObject = GameObject.Find("scriptMoves2");
@@ -68,21 +70,40 @@ public class createPanels : MonoBehaviour
 
     public void SetupPlayerPanels(List<Players> playersList)
     {
+
         if (playerPanelPrefab == null)
         {
             Debug.LogError("Player panel prefab is null.");
             return;
         }
+        Vector3 canvasPosition = canvas.position;
 
+        // Set spawn position dynamically to match the canvas position
+        Vector3 spawnPosition = new Vector3(canvasPosition.x, canvasPosition.y, 0f);
+
+        // Now use dynamicSpawnPosition for instantiating panels or UI elements
 
         foreach (var player in playersList)
 
         {
+            if (player.role == "TEPEGOZ")
+            {
+                tepegozPlayer = player.pname;
+            }
+            else if (player.role == "DEMIRKIYNAK")
+            {
+                demirkiynakPlayer= player.pname;
+            }else
+            {
+                
+            }
             if (playerPanelPrefab != null)
             {
                 GameObject transferPlane = Instantiate(transferPanelPrefab, spawnPosition, Quaternion.identity, canvas);
 
                 GameObject playerPlane = Instantiate(playerPanelPrefab, spawnPosition, Quaternion.identity, canvas);
+                
+
                 Transform names = playerPlane.transform.Find("Names");
 
                 // Calculate the width of a single button
@@ -158,6 +179,30 @@ public class createPanels : MonoBehaviour
                     explanationText = playerPlane.transform.Find("roleText").Find("roleInfo").GetComponent<TextMeshProUGUI>();
                     Button passButton = playerPlane.transform.Find("passButton").GetComponent<Button>();
                     Button pickButton = playerPlane.transform.Find("pickButton").GetComponent<Button>();
+
+                    Image roleImage = playerPlane.transform.Find("roleImage").GetComponent<Image>();
+                    string imagePath = "Images/" +player.role;
+                    Sprite baseSprites = Resources.Load<Sprite>(imagePath) as Sprite;
+
+                    if (roleImage != null && baseSprites != null)
+                    {
+                        roleImage.sprite = baseSprites;
+                    }
+                    else
+                    {
+                        if (roleImage == null)
+                        {
+                            Debug.Log("Image component not found!");
+                        }
+                        
+                        if (baseSprites == null)
+                        {
+                            Debug.Log("Sprite not found! Player role: " + player.role);
+                        }
+                    }
+
+
+
                     panelManager pManager = GetComponent<panelManager>();
                     passButton.onClick.AddListener(() => {pManager.passingPages();
                     if (player.role == "YILDIZ HAN")
@@ -192,12 +237,18 @@ public class createPanels : MonoBehaviour
 
                     pNameText1.text = "Name: " + player.pname;
                     pRoleText2.text = "Role: " + player.role;
+                    ActualPlay Aplay = GetComponent<ActualPlay>();
+                    bool tepegozDead = Aplay.isTepegozDead;
                     if (player.pname == playersList[playersList.Count - 1].pname)
                     {
-                        ActualPlay Aplay = GetComponent<ActualPlay>();
+                        
                         if (Aplay != null)
                         {
-                            pickButton.onClick.AddListener(Aplay.afterPlayerAction);
+                            if (playersList[playersList.Count - 1].role != "YILDIZ HAN")
+                            {
+                                pickButton.onClick.AddListener(Aplay.afterPlayerAction);
+                            }
+                            
                             passButton.onClick.AddListener(Aplay.afterPlayerAction);
 
                         }
@@ -228,7 +279,7 @@ public class createPanels : MonoBehaviour
                         buttonText.text = "Reveal";
                         //MERGEN - Ok attığı kişinin rolü açığa çıkar.
                     }
-                    else if (roleName == "Ulgen")
+                    else if (roleName == "ULGEN")
                     {
                         inactiveButton.interactable = true;
 
@@ -276,7 +327,7 @@ public class createPanels : MonoBehaviour
                     }
                     else if (roleName == "ALAZ HAN")
                     {
-                        explanationText.text = "Alaz Han, bir ateş yakarak o gece ateşin öfkesini evine gelenlere karşı püskürtür.";
+                        explanationText.text = "Alaz Han, bir ateş yakarak o gece ateşin öfkesini evine gelenlere karşı püskürtür. (max 2 defa)";
 
                         buttonText.text = "Light the fire";
                     }
@@ -284,7 +335,7 @@ public class createPanels : MonoBehaviour
                     {
                         explanationText.text = "Çabukluğu, sinsiliği ve mükemmel gözlemciliğiyle seçtiği kiinin evini gözlemler.";
 
-                        buttonText.text = "Lookout";
+                        buttonText.text = "lookout";
                     }
                     else if (roleName == "YILDIZ HAN")
                     {
@@ -300,8 +351,9 @@ public class createPanels : MonoBehaviour
                     }
                     else if (roleName == "DEMIRKIYNAK")
                     {
-                        explanationText.text = "Seçtiği kişiyi delirtir ve bir gün boyunca hiçbir eylemde bulunamamasına neden olur.";
+                        explanationText.text = "Seçtiği kişiyi delirtir ve bir gün boyunca hiçbir eylemde bulunamamasına neden olur. (Tepegöz ölürse öldürme özelliği kazanır)";
                         buttonText.text = "Madden";
+                        
                     }
                     else if (roleName == "SU IYESI")
                     {
@@ -330,12 +382,9 @@ public class createPanels : MonoBehaviour
                     }
                     else if (roleName == "GULYABANI")
                     {
-                        inactiveButton.interactable = true;
-                        TextMeshProUGUI extraButtonText = inactiveButton.GetComponentInChildren<TextMeshProUGUI>();
-                        extraButtonText.text = "Howl";
-                        buttonText.text = "Kill";
-                        inactiveButton.onClick.AddListener(() => changeStatusDifferent(player.role, extraButtonText.text));
-                        inactiveButton.onClick.AddListener(pManager.passingPages);
+                        explanationText.text = "Gulyabani 2 günün birinde güç toplar, diğerinde ise saldırabilir. Saldırdığı kişinin evine kim ziyarete geldiyse oları da öldürür.";
+
+                        buttonText.text = "Attack";
 
                     }
                     else if (roleName == "KORTIGES")
@@ -377,6 +426,32 @@ public class createPanels : MonoBehaviour
             }
         }
 
+        // tepegöz and demirkıynak sees each other
+        if (playersList.Count > 7)
+        {
+            int dIdx = 0, tIdx = 0;
+            for (int pc = 0; pc < playersList.Count; pc++)
+            {
+                if (playersList[pc].role == "TEPEGOZ")
+                {
+                    tIdx = pc;
+                }
+                else if (playersList[pc].role == "DEMIRKIYNAK")
+                {
+                    dIdx = pc;
+                }
+            }
+            GameObject tPanel = playerPanels.FirstOrDefault(panel => panel.name == playersList[tIdx].pname);
+            GameObject dPanel = playerPanels.FirstOrDefault(panel => panel.name == playersList[dIdx].pname);
+            if (tPanel !=null && dPanel !=null)
+            {
+                TextMeshProUGUI tInfoText = tPanel.transform.Find("passButton").Find("infoText").GetComponent<TextMeshProUGUI>();
+                TextMeshProUGUI dInfoText = dPanel.transform.Find("passButton").Find("infoText").GetComponent<TextMeshProUGUI>();
+                tInfoText.text = playersList[dIdx].pname + " is Demirkıynak";
+                dInfoText.text = playersList[tIdx].pname + " is Tepegöz";
+            }
+            
+        }
 
 
         if (infoPanel != null) panels.Add(infoPanel);
@@ -384,7 +459,6 @@ public class createPanels : MonoBehaviour
 
         //VOTING PANEL
         string voteName = "voting";
-        string decideName = "deciding";
         GameObject votePlane = createOnePanel(voteName, playersList, panels);
         votingPanelTo = votePlane;
         panels.Add(votePlane);
@@ -393,7 +467,11 @@ public class createPanels : MonoBehaviour
         //Debug.Log("gorko33 " + panels.Count);
 
 
-
+        for (int i = 0; i < playerPanels.Count; i++)
+        {
+            Debug.Log("Spawn Position: " + spawnPosition);
+            Debug.Log("Instantiated Panel Position: " + playerPanels[i].transform.position);
+        }
 
 
 
@@ -421,6 +499,9 @@ public class createPanels : MonoBehaviour
     }
     public GameObject createOnePanel(string panelName, List<Players> playersList, List<GameObject> panels)
     {
+        Vector3 canvasPosition = canvas.position;
+
+        Vector3 spawnPosition = new Vector3(canvasPosition.x, canvasPosition.y, 0f);
         GameObject votePlane = Instantiate(playerPanelPrefab, spawnPosition, Quaternion.identity, canvas);
         Transform voteNames = votePlane.transform.Find("Names");
 
@@ -489,34 +570,13 @@ public class createPanels : MonoBehaviour
 
     public void changeStatus(string ExeRole)
     {
-        if (selectedButton != null)
+        if (ExeRole != "")
         {
             Aplay = GetComponent<ActualPlay>();
             List<Players> deadPlayers = Aplay.deadPlayers;
-            TextMeshProUGUI buttonText = selectedButton.GetComponentInChildren<TextMeshProUGUI>();
-            //Debug.Log("sdfsdf=  " + ps[0].pname);
-            //Debug.Log("sdfsdf=  " + ps[0].pname + " DSFDS " + ExeRole);
-            Players playerCell = new Players();
-            playerCell = ps.FirstOrDefault(players => players.pname == buttonText.text);
+            bool tepegozDead = Aplay.isTepegozDead;
+            int tourC = Aplay.tourCount;
             Players choosingCell = ps.FirstOrDefault(players => players.role == ExeRole);
-            if (choosingCell.role != "UMAY")
-            {
-                if (playerCell.visitors == null)
-                {
-                    Debug.Log("sıkıntı1");
-                }
-                else if (choosingCell.pname== null)
-                {
-                    Debug.Log("sıkıntı2");
-                }
-                else
-                {
-                    playerCell.visitors.Add(choosingCell.pname);
-                }
-                
-            }
-
-
             if (choosingCell.role == "AI TOYON")
             {
                 choosingCell.revealed = true;
@@ -528,8 +588,36 @@ public class createPanels : MonoBehaviour
                 choosingCell.rescued = true;
                 choosingCell.action = "alaz";
             }
-            if (ExeRole != "")
+
+            if (selectedButton != null)
             {
+                
+                TextMeshProUGUI buttonText = selectedButton.GetComponentInChildren<TextMeshProUGUI>();
+                //Debug.Log("sdfsdf=  " + ps[0].pname);
+                //Debug.Log("sdfsdf=  " + ps[0].pname + " DSFDS " + ExeRole);
+                Players playerCell = new Players();
+                playerCell = ps.FirstOrDefault(players => players.pname == buttonText.text);
+                
+                if (choosingCell.role != "UMAY")
+                {
+                    if (playerCell.visitors == null)
+                    {
+                        Debug.Log("sıkıntı1");
+                    }
+                    else if (choosingCell.pname == null)
+                    {
+                        Debug.Log("sıkıntı2");
+                    }
+                    else
+                    {
+                        playerCell.visitors.Add(choosingCell.pname);
+                    }
+
+                }
+
+
+
+
                 if (choosingCell.role == "MERGEN")
                 {
                     choosingCell.visitedPlayer = playerCell.pname;
@@ -537,7 +625,7 @@ public class createPanels : MonoBehaviour
 
                     choosingCell.action = "reveal";
                 }
-                else if (choosingCell.role == "Ulgen")
+                else if (choosingCell.role == "ULGEN")
                 {
                     choosingCell.visitedPlayer = playerCell.pname;
                     playerCell.dead = true;
@@ -554,6 +642,7 @@ public class createPanels : MonoBehaviour
                     Players deadPlayerCell = deadPlayers.FirstOrDefault(player => player.pname == buttonText.text);
                     choosingCell.visitedPlayer = deadPlayerCell.pname;
                     deadPlayerCell.changeDead(false);
+                    deadPlayerCell.rescued = true;
                     choosingCell.action = "retrieve";
                 }
                 else if (choosingCell.role == "BURKUT")
@@ -595,7 +684,7 @@ public class createPanels : MonoBehaviour
                     choosingCell.visitedPlayer = playerCell.pname;
                     GameObject infoPartPanel = playerPanels.FirstOrDefault(panel => panel.name == choosingCell.pname);
                     TextMeshProUGUI infoText = infoPartPanel.transform.Find("passButton").Find("infoText").GetComponent<TextMeshProUGUI>();
-                    infoText.text = "the "+playerCell.pname +"'s role is " + playerCell.role;
+                    infoText.text = "the " + playerCell.pname + "'s role is " + playerCell.role;
                     choosingCell.action = "investigate";
                 }
                 else if (choosingCell.role == "TEPEGOZ")
@@ -603,12 +692,37 @@ public class createPanels : MonoBehaviour
                     choosingCell.visitedPlayer = playerCell.pname;
                     playerCell.changeDead(true);
                     choosingCell.action = "kill";
+                    if (demirkiynakPlayer != "")
+                    {
+                        GameObject infoPartPanel = playerPanels.FirstOrDefault(panel => panel.name == choosingCell.pname);
+                        TextMeshProUGUI infoText = infoPartPanel.transform.Find("passButton").Find("infoText").GetComponent<TextMeshProUGUI>();
+                        infoText.text = "Demirkıynak player is " + demirkiynakPlayer;
+                    }
                 }
                 else if (choosingCell.role == "DEMIRKIYNAK")
                 {
-                    choosingCell.visitedPlayer = playerCell.pname;
-                    playerCell.charmed = true;
-                    choosingCell.action = "charm";
+                    GameObject infoPartPanel = playerPanels.FirstOrDefault(panel => panel.name == choosingCell.pname);
+                    TextMeshProUGUI infoText = infoPartPanel.transform.Find("passButton").Find("infoText").GetComponent<TextMeshProUGUI>();
+                    infoText.text = "Tepegöz player is " + tepegozPlayer;
+                    if (tepegozDead)
+                    {
+                        choosingCell.visitedPlayer = playerCell.pname;
+                        playerCell.dead = true;
+                        choosingCell.action = "kill";
+                        // GameObject infoPartPanel = playerPanels.FirstOrDefault(panel => panel.name == choosingCell.pname);
+                        // TextMeshProUGUI infoText = infoPartPanel.transform.Find("passButton").Find("infoText").GetComponent<TextMeshProUGUI>();
+                        // infoText.text = "Tepegöz is dead, now it is your time to kill!";
+                        // Button pickButtonDemir = infoPartPanel.transform.Find("pickButton").GetComponentInChildren<TextMeshProUGUI>();
+                        // TextMeshProUGUI pickButtonText = pickButtonDemir.GetComponentInChildren<TextMeshProUGUI>();
+                        // pickButtonText.text = "kill";
+                    }
+                    else
+                    {
+                        choosingCell.visitedPlayer = playerCell.pname;
+                        playerCell.charmed = true;
+                        choosingCell.action = "charm";
+                    }
+
                 }
                 else if (choosingCell.role == "SU IYESI")
                 {
@@ -640,9 +754,14 @@ public class createPanels : MonoBehaviour
                     playerCell.changeDead(true);
                     choosingCell.action = "kill";
                 }
-                else if (choosingCell.role == "GULYABANI")
+                else if (choosingCell.role == "GULYABANI" || (tourC % 2 == 1))
                 {
                     choosingCell.visitedPlayer = playerCell.pname;
+                    foreach (string visitorName in playerCell.visitors)
+                    {
+                        Players visitorPlayer = ps.FirstOrDefault(player => player.pname == visitorName);
+                        visitorPlayer.dead = true;
+                    }
                     playerCell.changeDead(true);
                     choosingCell.action = "kill";
                 }
@@ -656,13 +775,15 @@ public class createPanels : MonoBehaviour
                 {
                     Debug.Log("OLMADIA Q ");
                 }
-            }
-            //Debug.Log("resmin mi var şuan elimde: " + playerCell.pname + " - " + playerCell.dead);
-        }
 
-        else
-        {
-            Debug.Log("SIKINTI VAAR");
+                //Debug.Log("resmin mi var şuan elimde: " + playerCell.pname + " - " + playerCell.dead);
+            }
+
+            else
+            {
+                Debug.Log("SIKINTI VAAR");
+            }
+
         }
 
     }
@@ -680,7 +801,7 @@ public class createPanels : MonoBehaviour
 
             Players choosingCell = ps.FirstOrDefault(players => players.role == ExeRole);
             //Debug.Log("resmin var şuan elimde: " + choosingCell.pname);
-            if (choosingCell.role == "Ulgen")
+            if (choosingCell.role == "ULGEN")
             {
                 choosingCell.visitedPlayer = playerCell.pname;
                 playerCell.rescued = true;
@@ -690,12 +811,6 @@ public class createPanels : MonoBehaviour
             {
                 choosingCell.visitedPlayer = playerCell.pname;
                 playerCell.markedSu = true;
-            }
-
-            else if (choosingCell.role == "GULYABANI")
-            {
-                choosingCell.visitedPlayer = playerCell.pname;
-                playerCell.changeDead(true);
             }
             else
             {
@@ -730,6 +845,8 @@ public class createPanels : MonoBehaviour
         {
             Aplay = GetComponent<ActualPlay>();
             TextMeshProUGUI buttonText = votingButton.GetComponentInChildren<TextMeshProUGUI>();
+            Vector3 canvasPosition = canvas.position;
+            Vector3 spawnPosition = new Vector3(canvasPosition.x, canvasPosition.y, 0f);
             GameObject tempPlane = Instantiate(playerPanelPrefab, spawnPosition, Quaternion.identity, canvas);
             Transform voteNames = tempPlane.transform.Find("Names");
 
@@ -742,7 +859,6 @@ public class createPanels : MonoBehaviour
             float voteSpacing = votebuttonWidth * maxVoteButtonsPerRow / 3 * 2;
             int votepCount = ps.Count;
 
-            int dummyVar = 0;
             TextMeshProUGUI pNameText1 = tempPlane.transform.Find("nameText").GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI pRoleText2 = tempPlane.transform.Find("roleText").GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI explanationText = tempPlane.transform.Find("roleText").Find("roleInfo").GetComponent<TextMeshProUGUI>();
@@ -807,7 +923,8 @@ public class createPanels : MonoBehaviour
 
     public void createEndPanel(string winnertxt)
     {
-
+        Vector3 canvasPosition = canvas.position;
+        Vector3 spawnPosition = new Vector3(canvasPosition.x, canvasPosition.y, 0f);
         GameObject tempPlane = Instantiate(playerPanelPrefab, spawnPosition, Quaternion.identity, canvas);
         TextMeshProUGUI pNameText1 = tempPlane.transform.Find("nameText").GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI pRoleText2 = tempPlane.transform.Find("roleText").GetComponent<TextMeshProUGUI>();
@@ -819,7 +936,6 @@ public class createPanels : MonoBehaviour
         TextMeshProUGUI killVoteText = HomePageButton.GetComponentInChildren<TextMeshProUGUI>();
 
         killVoteText.text = "Execute";
-        string killableName = "okey";
         pNameText1.text = winnertxt;
         pRoleText2.text = "GAME IS OVER";
         tempPlane.name = "endGamePage";
