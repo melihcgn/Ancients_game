@@ -1,0 +1,27 @@
+C:\Users\ttube\Desktop\tolgatubek_Tubek_Tolga_Step1\Client\bin\Debug\deneme_cs408project.exe.config
+C:\Users\ttube\Desktop\tolgatubek_Tubek_Tolga_Step1\Client\bin\Debug\deneme_cs408project.exe
+C:\Users\ttube\Desktop\tolgatubek_Tubek_Tolga_Step1\Client\bin\Debug\deneme_cs408project.pdb
+C:\Users\ttube\Desktop\tolgatubek_Tubek_Tolga_Step1\Client\bin\Debug\Newtonsoft.Json.dll
+C:\Users\ttube\Desktop\tolgatubek_Tubek_Tolga_Step1\Client\bin\Debug\Newtonsoft.Json.xml
+C:\Users\ttube\Desktop\tolgatubek_Tubek_Tolga_Step1\Client\obj\Debug\deneme_cs408project.csproj.AssemblyReference.cache
+C:\Users\ttube\Desktop\tolgatubek_Tubek_Tolga_Step1\Client\obj\Debug\deneme_cs408project.csproj.SuggestedBindingRedirects.cache
+C:\Users\ttube\Desktop\tolgatubek_Tubek_Tolga_Step1\Client\obj\Debug\deneme_cs408project.ClientMain.resources
+C:\Users\ttube\Desktop\tolgatubek_Tubek_Tolga_Step1\Client\obj\Debug\deneme_cs408project.Properties.Resources.resources
+C:\Users\ttube\Desktop\tolgatubek_Tubek_Tolga_Step1\Client\obj\Debug\deneme_cs408project.csproj.GenerateResource.cache
+C:\Users\ttube\Desktop\tolgatubek_Tubek_Tolga_Step1\Client\obj\Debug\deneme_cs408project.csproj.CoreCompileInputs.cache
+C:\Users\ttube\Desktop\tolgatubek_Tubek_Tolga_Step1\Client\obj\Debug\deneme_cs408project.csproj.CopyComplete
+C:\Users\ttube\Desktop\tolgatubek_Tubek_Tolga_Step1\Client\obj\Debug\deneme_cs408project.exe
+C:\Users\ttube\Desktop\tolgatubek_Tubek_Tolga_Step1\Client\obj\Debug\deneme_cs408project.pdb
+C:\Users\melih\Desktop\23-24 Spring Works\CS408\CS408-project\Step2\Deneme\test\Client\bin\Debug\deneme_cs408project.exe.config
+C:\Users\melih\Desktop\23-24 Spring Works\CS408\CS408-project\Step2\Deneme\test\Client\bin\Debug\deneme_cs408project.exe
+C:\Users\melih\Desktop\23-24 Spring Works\CS408\CS408-project\Step2\Deneme\test\Client\bin\Debug\deneme_cs408project.pdb
+C:\Users\melih\Desktop\23-24 Spring Works\CS408\CS408-project\Step2\Deneme\test\Client\bin\Debug\Newtonsoft.Json.dll
+C:\Users\melih\Desktop\23-24 Spring Works\CS408\CS408-project\Step2\Deneme\test\Client\bin\Debug\Newtonsoft.Json.xml
+C:\Users\melih\Desktop\23-24 Spring Works\CS408\CS408-project\Step2\Deneme\test\Client\obj\Debug\deneme_cs408project.csproj.AssemblyReference.cache
+C:\Users\melih\Desktop\23-24 Spring Works\CS408\CS408-project\Step2\Deneme\test\Client\obj\Debug\deneme_cs408project.ClientMain.resources
+C:\Users\melih\Desktop\23-24 Spring Works\CS408\CS408-project\Step2\Deneme\test\Client\obj\Debug\deneme_cs408project.Properties.Resources.resources
+C:\Users\melih\Desktop\23-24 Spring Works\CS408\CS408-project\Step2\Deneme\test\Client\obj\Debug\deneme_cs408project.csproj.GenerateResource.cache
+C:\Users\melih\Desktop\23-24 Spring Works\CS408\CS408-project\Step2\Deneme\test\Client\obj\Debug\deneme_cs408project.csproj.CoreCompileInputs.cache
+C:\Users\melih\Desktop\23-24 Spring Works\CS408\CS408-project\Step2\Deneme\test\Client\obj\Debug\deneme_cs408project.csproj.CopyComplete
+C:\Users\melih\Desktop\23-24 Spring Works\CS408\CS408-project\Step2\Deneme\test\Client\obj\Debug\deneme_cs408project.exe
+C:\Users\melih\Desktop\23-24 Spring Works\CS408\CS408-project\Step2\Deneme\test\Client\obj\Debug\deneme_cs408project.pdb
