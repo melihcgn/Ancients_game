@@ -1,2 +1,2 @@
 # Ancients_Game
- A party game
+Source codes of old version of my individual game project "Myth Party".
